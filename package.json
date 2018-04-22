@@ -1,0 +1,19 @@
+{
+  "name": "tract",
+  "version": "1.0.0",
+  "description": "Python with Tensorflow on backend, React on frontend, let's create some art!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jedluk/tract.git"
+  },
+  "author": "Jedrzej Lukasiuk & Filip Gloch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jedluk/tract/issues"
+  },
+  "homepage": "https://github.com/jedluk/tract#readme"
+}
