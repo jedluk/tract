@@ -1,0 +1,36 @@
+{
+  "name": "tract",
+  "version": "1.0.0",
+  "description": "Python with Tensorflow on backend, React on frontend, let's create some art!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-server": "webpack-dev-server --mode development --open --hot",
+    "build:prod": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jedluk/tract.git"
+  },
+  "author": "Jedrzej Lukasiuk & Filip Gloch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jedluk/tract/issues"
+  },
+  "homepage": "https://github.com/jedluk/tract#readme",
+  "dependencies": {
+    "moment": "^2.22.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.3"
+  }
+}

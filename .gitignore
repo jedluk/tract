@@ -1,4 +1,6 @@
-node_modules/*
+client/node_modules/*
+client/yarn.lock
+client/public/bundle.js
+client/public/index.html
+node_modules
 yarn.lock
-public/bundle.js
-public/index.html
