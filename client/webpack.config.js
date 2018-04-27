@@ -9,7 +9,7 @@ module.exports = env => {
   const CSSExtract = new ExtractTextPlugin("styles.css");
 
   return {
-    entry: ["babel-polyfill", "./src/index.js"],
+    entry: ["babel-polyfill", "./src/index.js", 'webpack-dev-server/client?http://0.0.0.0:3000'],
     output: {
       path: path.join(__dirname, "public", "dist"),
       filename: "bundle.js"

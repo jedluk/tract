@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "Python with Tensorflow on backend, React on frontend, let's create some art!",
   "main": "index.js",
+  "private": true,
   "proxy": {
     "/upload": {
       "target": "http://localhost:5000"
     }
   },
   "scripts": {
-    "dev-server": "webpack-dev-server",
+    "dev-server": "webpack-dev-server --host 0.0.0.0 --port 3000",
     "build:dev": "webpack && gulp production",
     "build:prod": "webpack && gulp production",
     "sass": "gulp sass",
@@ -38,12 +39,14 @@
     "normalize.css": "^8.0.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-fontawesome": "^1.6.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "redux": "^4.0.0",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
     "uglify-js": "^3.3.22",
+    "uuid": "^3.2.1",
     "webpack": "3.1.0"
   },
   "devDependencies": {
