@@ -8,7 +8,11 @@
     "npm": "5.0.3"
   },
   "scripts": {
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "server": "nodemon server/index.js",
+    "client": "npm run dev-server --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build:prod --prefix client"
   },
   "repository": {
     "type": "git",
@@ -21,6 +25,11 @@
   },
   "homepage": "https://github.com/jedluk/tract#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "concurrently": "^3.5.1",
+    "express": "^4.16.3",
+    "formidable": "^1.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
   }
 }

@@ -1,7 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
+import UploadBox from './UploadBox';
 
-export default class App extends Component {
-  render() {
-    return <div>Start! hehe</div>
-  }
-}
+const App = () => (
+  <div>
+    <header>
+      <div className="row">
+        <h1>Deep learnig based coloring</h1>
+      </div>
+    </header>
+    <UploadBox />
+  </div>
+);
+
+export default App;
