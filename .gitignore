@@ -1,6 +1,8 @@
 client/node_modules/*
 client/yarn.lock
-client/public/bundle.js
-client/public/index.html
+client/public/dist/*
+client/public/fonts/*
+client22/*
+server/assets/*
 node_modules
 yarn.lock
