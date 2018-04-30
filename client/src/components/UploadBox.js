@@ -63,7 +63,7 @@ export default class UploadBox extends Component {
     fileName = `${fileName}${extension}`;
     fd.append(fileName, file);
     axios
-      .post("http://localhost:5000/upload", fd)
+      .post("upload", fd)
       .then(res => {
         this.setState({ uploaded: true });
         if (this.props.gray){

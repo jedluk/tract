@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const HERE = __dirname;
 const ASSETS_DIR = path.join(HERE, "..", "assets");
+const IMG_DIR = path.join(ASSETS_DIR, '..', '..', 'client', 'public', 'img');
 
 processImage = (grayImg, colorImg, outImg) =>
   new Promise((res, rej) => {
@@ -27,7 +28,19 @@ processImage = (grayImg, colorImg, outImg) =>
     );
     process.stdout.on("data", data => {
       if (data.toString().trim() === "image saved") {
-        console.log(data.toString());
+        fs.copyFileSync(
+          outImgPath,
+          path.join(
+            __dirname,
+            "..",
+            "..",
+            "client",
+            "public",
+            "img",
+            "ready",
+            outImg
+          )
+        );
         res({
           outImg,
           data: data.toString()

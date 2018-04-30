@@ -4,8 +4,8 @@
   "description": "NodeJS/React/Python/Tensorflow experimental project",
   "main": "index.js",
   "engine": {
-    "node": "8.1.2",
-    "npm": "5.0.3"
+    "node": "8.5.0",
+    "npm": "5.3.0"
   },
   "scripts": {
     "start": "node server/index.js",

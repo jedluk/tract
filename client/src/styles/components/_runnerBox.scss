@@ -9,4 +9,9 @@
     border-radius: 50%;
     cursor: pointer;
   }
+
+  img:hover {
+    opacity: 1;
+    transform: scale(1.3);
+  }
 }

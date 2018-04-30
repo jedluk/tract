@@ -18,3 +18,4 @@ export const MAIN_IMG_TEXT = {
   title: "Deep learning based coloring",
   subtitile: "Refresh appearance of your images in 3 simple steps !"
 }
+export const APP_URL = 'https://mysterious-ocean-98570.herokuapp.com/';

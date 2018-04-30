@@ -15,7 +15,7 @@ export default class RunnerBox extends Component {
 
   handleProcessing() {
     this.setState({ processing: true });
-    axios.get('http://localhost:5000/process', {
+    axios.get('process', {
       params: {
         grayImg: this.props.grayImg,
         colorImg: this.props.colorImg,
@@ -23,9 +23,9 @@ export default class RunnerBox extends Component {
       }
     })
     .then((res) => {
-      let readyImgPath = res.data.outImg;
-      // readyImgPath = `http://localhost:3000/../server/assets/ready/${readyImgPath}`;
-      this.setState({ readyImg: readyImgPath})
+      let readyImg = res.data.outImg;
+      readyImg = `../img/ready/${readyImg}`;
+      this.setState({ readyImg: readyImg})
     })
     .catch((err) => console.log(err));
   }
@@ -40,7 +40,6 @@ export default class RunnerBox extends Component {
           this.state.readyImg ? (
             <div className="downloadBox">
               <img src={this.state.readyImg} width="200px" alt="" />
-              <h3>Ready Image !!!</h3>
             </div>
           ) : (
           <div onClick={this.handleProcessing}>
