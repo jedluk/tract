@@ -1,69 +1,31 @@
 import React, { Component } from "react";
 import UploadBox from "./UploadBox";
 import RunnerBox from "./RunnerBox";
-import axios from "axios";
+import {
+  STEP_DESCRIPTION,
+  IMG_PATH,
+  MAIN_IMG_TEXT
+} from "../utils/stringConstant";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dragStates: [{ active: false }, { active: false }],
-      uploadedStates: [{ uploaded: null }, { uploaded: null }]
+      grayImg: null,
+      colorImg: null
     };
+    this.setGrayImg = this.setGrayImg.bind(this);
+    this.setColorImg = this.setColorImg.bind(this);
   }
 
-  componentDidMount() {
-    const items = document.querySelectorAll(".uploadBox:not(:last-child)");
-    items.forEach((item, idx) => {
-      item.addEventListener("dragenter", () => {
-        const dragStates = this.refreshDragStates(idx, true);
-        this.setState({ ...this.state, dragStates });
-      });
-      item.addEventListener("dragleave", () => {
-        const dragStates = this.refreshDragStates(idx, false);
-        this.setState({ ...this.state, dragStates });
-      });
-      item.addEventListener("drop", evt => {
-        evt.stopPropagation();
-        evt.preventDefault();
-        const files = evt.dataTransfer.files;
-        this.handleUploadFile(files[0], idx);
-      });
-      item.addEventListener("dragover", evt => {
-        evt.stopPropagation();
-        evt.preventDefault();
-        evt.dataTransfer.dropEffect = "copy";
-      });
-    });
+  setGrayImg(name) {
+    this.setState({ grayImg: name });
+    console.log(`gray is set with name ${name}`);
   }
 
-  refreshDragStates(idx, value) {
-    const dragStates = [...this.state.dragStates];
-    dragStates[idx].active = value;
-    return dragStates;
-  }
-
-  refreshUploadedStates(idx, value) {
-    const uploadedStates = [...this.state.uploadedStates];
-    uploadedStates[idx].uploaded = value;
-    return uploadedStates;
-  }
-
-  handleUploadFile(file, idx) {
-    const fd = new FormData();
-    fd.append("image", file, file.name);
-    axios
-      .post("/upload", fd)
-      .then(res => {
-        console.log(res);
-        const uploadedStates = this.refreshUploadedStates(idx, true);
-        this.setState({ ...this.state, uploadedStates });
-      })
-      .catch(err => {
-        // show image
-        const uploadedStates = this.refreshUploadedStates(idx, false);
-        this.setState({ ...this.state, uploadedStates });
-      });
+  setColorImg(name) {
+    this.setState({ colorImg: name });
+    console.log(`color is set with name ${name}`);
   }
 
   render() {
@@ -71,26 +33,27 @@ export default class App extends Component {
       <div>
         <header>
           <div className="row">
-            <h1>Deep learning based coloring</h1>
-            <h2>Refresh appearance of your old image in 3 simple steps</h2>
+            <h1>{MAIN_IMG_TEXT.title}</h1>
+            <h2>{MAIN_IMG_TEXT.subtitile}</h2>
           </div>
         </header>
         <section className="content">
           <UploadBox
-            dragActive={this.state.dragStates[0].active}
-            uploaded={this.state.uploadedStates[0].uploaded}
-            text="1. Upload gray-scale image"
-            src="../img/pencil_gray.jpg"
+            gray={true}
+            text={STEP_DESCRIPTION[1]}
+            src={IMG_PATH[1]}
+            setGrayImg={this.setGrayImg}
           />
           <UploadBox
-            dragActive={this.state.dragStates[1].active}
-            uploaded={this.state.uploadedStates[1].uploaded}
-            text="2. Add some colorfull pattern"
-            src="../img/pencil.jpg"
+            text={STEP_DESCRIPTION[2]}
+            src={IMG_PATH[2]}
+            setColorImg={this.setColorImg}
           />
           <RunnerBox
-            text="3. Hit start and wait for result!"
-            src="../img/pencil_mix.jpg"
+            grayImg={this.state.grayImg}
+            colorImg={this.state.colorImg}
+            text={STEP_DESCRIPTION[3]}
+            src={IMG_PATH[3]}
           />
         </section>
       </div>

@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(require("./routes/upload"));
+// app.use(require("./routes/process"));
 
 if (!fs.existsSync(path.join(__dirname, "assets"))) {
   fs.mkdir(path.join(__dirname, "assets"), err => {

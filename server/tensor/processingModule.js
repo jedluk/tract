@@ -19,9 +19,10 @@ processImage = () =>
 
     const { spawn } = require("child_process");
     const process = spawn("python", [
-      path.join(HERE, "script.py"),
-      testFile,
-      IMAGE_DIR
+      path.join(HERE, "run.py"),
+      `inputColor=${testFile}`,
+      `inputGray=${IMAGE_DIR}`,
+      `N=${2}`
     ]);
 
     process.stdout.on("data", data => {

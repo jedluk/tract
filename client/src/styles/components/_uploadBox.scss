@@ -3,8 +3,9 @@
   align-items: center;
   text-align: center;
   border-radius: 10px;
-  width: 20%;
-  min-height: 250px;
+  width: 30vw;
+  height: 20vh;
+  // min-height: 250px;
 
   img {
     opacity: 0.5;
@@ -23,11 +24,18 @@
   }
 }
 
+@media (max-width: $breakpoint) {
+  .uploadBox {
+    margin-bottom: $xl-size;
+    min-width: 80vw;
+  }
+}
+
 .uploadBox:hover {
   color: $dark-gray;
   transition: color 0.5s;
 }
 
 .customBorder {
- border: 5px dashed $uploadBorder;
+  border: 5px dashed $uploadBorder;
 }
