@@ -54,7 +54,6 @@ export default class UploadBox extends Component {
   }
 
   handleUploadFile(file, idx) {
-    console.log('handling')
     const fd = new FormData();
     let fileName = uuidv1().slice(0,8);
     if(this.props.gray){
@@ -66,7 +65,6 @@ export default class UploadBox extends Component {
     axios
       .post("http://localhost:5000/upload", fd)
       .then(res => {
-        // call parent method
         this.setState({ uploaded: true });
         if (this.props.gray){
           this.props.setGrayImg(fileName);
@@ -84,14 +82,13 @@ export default class UploadBox extends Component {
 
   handleModalClose() {
     this.setState({
-      ...this.state,
       modal: false,
       dragActive: false
     });
   }
 
   deduceText() {
-    if (this.state.imageUploaded) {
+    if (this.state.uploaded) {
       return "Image uploaded sucesfully!";
     } else if (this.state.dragActive) {
       return `Drop ${this.props.gray ? 'gray' : 'color'} image here`;
@@ -118,7 +115,7 @@ export default class UploadBox extends Component {
           <FontAwesome name={fontName} size="5x" style={{ color: fontColor }} />
         ) : (
           <img
-            src={this.props.src} // store here (optionally from user)
+            src={this.props.src}
             width="200px"
             alt=""
           />

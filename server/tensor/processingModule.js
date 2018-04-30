@@ -1,45 +1,49 @@
 const path = require("path");
 const fs = require("fs");
-
 const HERE = __dirname;
 const ASSETS_DIR = path.join(HERE, "..", "assets");
-const IMAGE_DIR = path.join(ASSETS_DIR, "ready.jpg");
 
-const getTestFile = () => {
-  const file = fs.readdirSync(ASSETS_DIR).find(file => /^black_/.test(file));
-  return path.join(ASSETS_DIR, file);
-};
-
-processImage = () =>
+processImage = (grayImg, colorImg, outImg) =>
   new Promise((res, rej) => {
-    const testFile = getTestFile();
-    if (!testFile) {
-      rej("No file to process!");
+    grayImgPath = path.join(ASSETS_DIR, grayImg);
+    colorImgPath = path.join(ASSETS_DIR, colorImg);
+    outImgPath = path.join(ASSETS_DIR, "ready", outImg);
+
+    if (!fs.existsSync(grayImgPath) || !fs.existsSync(colorImgPath)) {
+      rej("Some of requested files do not exist ... ");
     }
 
     const { spawn } = require("child_process");
     const process = spawn("python", [
       path.join(HERE, "run.py"),
-      `inputColor=${testFile}`,
-      `inputGray=${IMAGE_DIR}`,
-      `N=${2}`
+      `inputGray=${grayImgPath}`,
+      `inputColor=${colorImgPath}`,
+      `outImg=${outImgPath}`,
+      `N=${10}`
     ]);
 
+    console.log(
+      `Started processing with params: ${grayImgPath}, ${colorImgPath} , ${outImgPath}`
+    );
     process.stdout.on("data", data => {
-      if (data === "ready") {
-        res(data.toString());
+      if (data.toString().trim() === "image saved") {
+        console.log(data.toString());
+        res({
+          outImg,
+          data: data.toString()
+        });
       } else {
         rej(data.toString());
       }
     });
 
     process.stderr.on("data", data => {
+      console.log(`Error during executing python script ${data.toString()}`);
       rej(data.toString());
     });
   });
 
 module.exports = {
   ASSETS_DIR,
-  IMAGE_DIR,
   processImage
 };

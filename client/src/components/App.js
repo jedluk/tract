@@ -12,20 +12,24 @@ export default class App extends Component {
     super(props);
     this.state = {
       grayImg: null,
-      colorImg: null
+      colorImg: null,
+      refresh: false
     };
     this.setGrayImg = this.setGrayImg.bind(this);
     this.setColorImg = this.setColorImg.bind(this);
+    this.refreshBoxes = this.refreshBoxes.bind(this);
   }
 
   setGrayImg(name) {
     this.setState({ grayImg: name });
-    console.log(`gray is set with name ${name}`);
   }
 
   setColorImg(name) {
     this.setState({ colorImg: name });
-    console.log(`color is set with name ${name}`);
+  }
+
+  refreshBoxes(){
+    this.setState({ refresh: true });
   }
 
   render() {
@@ -43,17 +47,20 @@ export default class App extends Component {
             text={STEP_DESCRIPTION[1]}
             src={IMG_PATH[1]}
             setGrayImg={this.setGrayImg}
+            refresh={this.state.refresh}
           />
           <UploadBox
             text={STEP_DESCRIPTION[2]}
             src={IMG_PATH[2]}
             setColorImg={this.setColorImg}
+            refresh={this.state.refresh}
           />
           <RunnerBox
             grayImg={this.state.grayImg}
             colorImg={this.state.colorImg}
             text={STEP_DESCRIPTION[3]}
             src={IMG_PATH[3]}
+            refreshBoxes={this.refreshBoxes}
           />
         </section>
       </div>

@@ -8,9 +8,10 @@ class ImagePainter:
     DEV_MODE = 0
     CLUSTERING = 1
 
-    def __init__(self, color, gray, N):
+    def __init__(self, color, gray, outPath, N):
         self.colorImg = cv2.cvtColor(cv2.imread(color), cv2.COLOR_BGR2RGB)
         self.grayImg = cv2.imread(gray)
+        self.outImgPath = outPath
         grayHeight, grayWidth, grayChannels = self.grayImg.shape
         if grayChannels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
@@ -126,7 +127,7 @@ class ImagePainter:
             file.close()
         self.outImg = outImg
         if save:
-            cv2.imwrite('colored.jpg', self.outImg)
+            cv2.imwrite(self.outImgPath, self.outImg)
             print("image saved")
                 
 def main(**kwargs):
@@ -138,9 +139,11 @@ def main(**kwargs):
             inputGray = value
         elif key == 'N':
             clusters = value
+        elif key == 'outImg':
+            outImg = value
     # explicity show we want to use clustering
     ImagePainter.CLUSTERING = 1
-    imagePainter = ImagePainter(inputColor, inputGray, clusters)
+    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters)
     if 1 == ImagePainter.CLUSTERING:
         imagePainter.findColorsByClusterirng()
         imagePainter.colorGrayImage()

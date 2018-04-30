@@ -13,12 +13,7 @@ router.post("/upload", (req, res) => {
     file.path = path.join(filePath, name);
   });
   form.on("end", () => {
-    res.header("Access-Control-Allow-Origin", "*");
     res.send("Captured image!");
-    // processingModule
-    //   .processImage()
-    //   .then(data => console.log("image saved"))
-    //   .catch(err => console.log(err));
   });
 });
 
