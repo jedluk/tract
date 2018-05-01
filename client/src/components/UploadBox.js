@@ -24,7 +24,9 @@ export default class UploadBox extends Component {
       this.setState({ dragActive: true });
     });
     box.addEventListener("dragleave", () => {
-      this.setState({ dragActive: false });
+      if (this.state.uploaded !== true) {
+        this.setState({ dragActive: false });
+      }
     });
     box.addEventListener("drop", evt => {
       evt.stopPropagation();
@@ -34,7 +36,7 @@ export default class UploadBox extends Component {
         this.setState({
           modal: true,
           modalText: MODAL_CONTENT_TEXT.MUL_INFO
-      });
+        });
       } else {
         if (/(\.png)|(\.jpg)|(\.tif?f)$/.test(files[0].name)) {
           this.handleUploadFile(files[0]);
@@ -55,28 +57,34 @@ export default class UploadBox extends Component {
 
   handleUploadFile(file, idx) {
     const fd = new FormData();
-    let fileName = uuidv1().slice(0,8);
-    if(this.props.gray){
+    let fileName = uuidv1().slice(0, 8);
+    if (this.props.gray) {
       fileName = `black_${fileName}`;
     }
-    const extension = file.name.slice(-(file.name.length - file.name.lastIndexOf('.')));
+    const extension = file.name.slice(
+      -(file.name.length - file.name.lastIndexOf("."))
+    );
     fileName = `${fileName}${extension}`;
     fd.append(fileName, file);
+    const url =
+      process.env.NODE_ENV === "production"
+        ? "upload"
+        : "http://localhost:5000/upload";
     axios
-      .post("upload", fd)
+      .post(url, fd)
       .then(res => {
         this.setState({ uploaded: true });
-        if (this.props.gray){
+        if (this.props.gray) {
           this.props.setGrayImg(fileName);
         } else {
           this.props.setColorImg(fileName);
         }
       })
       .catch(err => {
-        this.setState({ 
+        this.setState({
           modal: true,
           modalText: MODAL_CONTENT_TEXT.ERR_UPL
-       });
+        });
       });
   }
 
@@ -91,7 +99,7 @@ export default class UploadBox extends Component {
     if (this.state.uploaded) {
       return "Image uploaded sucesfully!";
     } else if (this.state.dragActive) {
-      return `Drop ${this.props.gray ? 'gray' : 'color'} image here`;
+      return `Drop ${this.props.gray ? "gray" : "color"} image here`;
     } else {
       return this.props.text;
     }
@@ -114,11 +122,7 @@ export default class UploadBox extends Component {
         {this.state.dragActive ? (
           <FontAwesome name={fontName} size="5x" style={{ color: fontColor }} />
         ) : (
-          <img
-            src={this.props.src}
-            width="200px"
-            alt=""
-          />
+          <img src={this.props.src} width="200px" alt="" />
         )}
         <h3>{text}</h3>
       </div>

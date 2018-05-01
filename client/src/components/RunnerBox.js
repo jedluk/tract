@@ -15,7 +15,8 @@ export default class RunnerBox extends Component {
 
   handleProcessing() {
     this.setState({ processing: true });
-    axios.get('process', {
+    const url = process.env.NODE_ENV === "production" ? 'process' : 'http://localhost:5000/process';
+    axios.get(url, {
       params: {
         grayImg: this.props.grayImg,
         colorImg: this.props.colorImg,
