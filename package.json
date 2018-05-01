@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "NodeJS/React/Python/Tensorflow experimental project",
   "main": "index.js",
-  "engine": {
+  "engines": {
     "node": "8.5.0",
     "npm": "5.3.0"
   },
