@@ -1,21 +1,25 @@
 // Main View
-header {
+@mixin mainImg($opacity) {
   background-image: -webkit-linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, $opacity),
       rgba(0, 0, 0, 1)
     ),
     url("/img/network.jpg");
   background-image: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, $opacity),
       rgba(0, 0, 0, 1)
     ),
     url("/img/network.jpg");
   background-size: cover;
   background-position: center;
-  height: 70vh;
   background-attachment: fixed;
+}
+
+header {
+  @include mainImg(0.4);
+  height: 70vh;
 }
 
 .content {
@@ -27,7 +31,7 @@ header {
   padding: 20px;
 }
 
-@media(max-width: $breakpoint) {
+@media (max-width: $breakpoint) {
   .content {
     height: 100%;
     display: flex;
@@ -48,4 +52,16 @@ header {
   width: 100%;
   height: 100%;
   padding-left: 50px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  font-size: 12px;
+  margin: 5px;
+}
+
+a {
+  color: $uploadBorder;
 }

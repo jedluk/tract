@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import UploadBox from "./UploadBox";
 import RunnerBox from "./RunnerBox";
 import {
@@ -62,7 +63,13 @@ export default class MainView extends Component {
             src={IMG_PATH[3]}
             refreshBoxes={this.refreshBoxes}
           />
-        </section>
+        </section> 
+        <footer>
+          Go to {" "}
+          <Link to="/gallery">
+            gallery
+          </Link>
+        </footer>
       </div>
     );
   }
