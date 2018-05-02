@@ -19,3 +19,4 @@ export const MAIN_IMG_TEXT = {
   subtitile: "Refresh appearance of your images in 3 simple steps !"
 }
 export const APP_URL = 'https://mysterious-ocean-98570.herokuapp.com/';
+export const STATIC_IMG_NAMES = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'];

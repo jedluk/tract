@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
+import AppRouter from './routers/AppRouter';
 import 'normalize.css/normalize.css';
 import './styles/style.scss';
 
-// place for provider and router
-const jsx = <App />
-
-ReactDOM.render(jsx, document.getElementById('root'));
+ReactDOM.render(<AppRouter />, document.getElementById('root'));

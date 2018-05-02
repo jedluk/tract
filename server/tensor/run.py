@@ -8,13 +8,15 @@ class ImagePainter:
     DEV_MODE = 0
     CLUSTERING = 1
 
-    def __init__(self, color, gray, outPath, N):
+    def __init__(self, color, gray, outPath, N, saveGray):
         self.colorImg = cv2.cvtColor(cv2.imread(color), cv2.COLOR_BGR2RGB)
         self.grayImg = cv2.imread(gray)
         self.outImgPath = outPath
         grayHeight, grayWidth, grayChannels = self.grayImg.shape
         if grayChannels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
+        if saveGray:
+            cv2.imwrite('gray.jpg', self.grayImg)
         self.outImg = np.zeros([grayHeight, grayWidth, 3])
         self.clusters = int(N)
         self.estimatedColors = np.zeros([self.clusters,3])
@@ -143,7 +145,8 @@ def main(**kwargs):
             outImg = value
     # explicity show we want to use clustering
     ImagePainter.CLUSTERING = 1
-    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters)
+    ImagePainter.DEV_MODE = 1
+    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters, True)
     if 1 == ImagePainter.CLUSTERING:
         imagePainter.findColorsByClusterirng()
         imagePainter.colorGrayImage()
