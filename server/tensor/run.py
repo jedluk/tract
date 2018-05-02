@@ -5,16 +5,18 @@ import random
 
 class ImagePainter:
     R_CHANNEL, G_CHANNEL, B_CHANNEL = (0, 1, 2)
-    DEV_MODE = 0
+    DEV_MODE, LOGGING = (0, 0)
     CLUSTERING = 1
 
-    def __init__(self, color, gray, outPath, N):
+    def __init__(self, color, gray, outPath, N, saveGray):
         self.colorImg = cv2.cvtColor(cv2.imread(color), cv2.COLOR_BGR2RGB)
         self.grayImg = cv2.imread(gray)
         self.outImgPath = outPath
         grayHeight, grayWidth, grayChannels = self.grayImg.shape
         if grayChannels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
+        if saveGray:
+            cv2.imwrite('gray.jpg', self.grayImg)
         self.outImg = np.zeros([grayHeight, grayWidth, 3])
         self.clusters = int(N)
         self.estimatedColors = np.zeros([self.clusters,3])
@@ -105,7 +107,7 @@ class ImagePainter:
         height, width = (self.grayImg.shape[0], self.grayImg.shape[1])
         outImg = np.zeros([height, width, 3])
         self.grayThresholds = np.arange(int(255 / self.clusters), 256, int(255 / self.clusters))
-        if self.DEV_MODE:
+        if self.LOGGING:
             file = open('logs.txt','w')
             self.grayThresholds.tofile(file," ")
         for x in range(0,height):
@@ -116,7 +118,7 @@ class ImagePainter:
                     if self.grayThresholds[index] - intensity >= 0:
                         idx = index
                         break
-                if self.DEV_MODE:
+                if self.LOGGING:
                     file.write("intensity {}\tclass {}\t diffs\t".format(intensity, idx))
                     # diffs.tofile(file,sep=", ")
                     file.write("\n")
@@ -143,7 +145,8 @@ def main(**kwargs):
             outImg = value
     # explicity show we want to use clustering
     ImagePainter.CLUSTERING = 1
-    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters)
+    ImagePainter.DEV_MODE = 0
+    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters, True)
     if 1 == ImagePainter.CLUSTERING:
         imagePainter.findColorsByClusterirng()
         imagePainter.colorGrayImage()

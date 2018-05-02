@@ -1,0 +1,18 @@
+.notFoundBox {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+.link {
+  text-decoration: none;
+  color: $uploadBorder !important;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
