@@ -25,8 +25,8 @@
 
 @media (max-width: $breakpoint) {
   .uploadBox {
-    margin-bottom: $xl-size;
     min-width: 80vw;
+    min-height: 280px;
   }
 }
 

@@ -38,6 +38,14 @@ header {
     flex-direction: column;
     justify-content: center;
   }
+
+  h1 {
+    font-size: 18px;
+  }
+  h2 {
+    font-size: 14px;
+    max-width: 250px;
+  }
 }
 
 %column-flex-center {
