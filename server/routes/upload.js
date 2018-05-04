@@ -1,9 +1,8 @@
 const express = require("express");
-const fs = require("fs");
 const router = express.Router();
+const fs = require("fs");
 const formidable = require("formidable");
 const path = require("path");
-const processingModule = require("../tensor/processingModule");
 
 router.post("/upload", (req, res) => {
   let form = new formidable.IncomingForm();
