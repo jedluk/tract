@@ -17,6 +17,7 @@ RUN ln -sf /root/.nvm/versions/node/$NODE_VERSION/bin/npm /usr/bin/npm
 
 FROM node as prod
 
+ENV TF_CPP_MIN_LOG_LEVEL=2
 ENV NODE_ENV=production
 WORKDIR /tmp
 COPY package.json /tmp/
