@@ -4,5 +4,7 @@ client/public/dist/*
 client/public/fonts/*
 client22/*
 server/assets/*
+server/db/playground/*
 node_modules
 yarn.lock
+package-lock.json

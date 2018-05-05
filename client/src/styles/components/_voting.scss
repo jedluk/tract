@@ -1,0 +1,33 @@
+.social {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  margin: 10px;
+  width: 70px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fa-thumbs-up {
+  color: white;
+}
+
+.fa-heart {
+  color: white;
+}
+
+.fa-smile-o {
+  color: white;
+}
+
+.fa-thumbs-up:hover {
+  color: blue;
+}
+
+.fa-smile-o:hover {
+  color: yellow;
+}
+
+.fa-heart:hover {
+  color: red;
+}

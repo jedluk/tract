@@ -18,6 +18,10 @@
   width: 100%;
 }
 
+.main-img {
+  position: relative;
+}
+
 .imgs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

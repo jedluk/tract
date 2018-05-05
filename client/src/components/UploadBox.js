@@ -122,7 +122,7 @@ export default class UploadBox extends Component {
           <img src={this.props.src} width="200px" alt="" />
         )}
         <h3>{text}</h3>
-        <h5>Drop here</h5>
+        <h5>{this.state.dragActive ? "" : "Drop here"}</h5>
       </div>
     );
   }

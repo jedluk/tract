@@ -6,7 +6,7 @@ const { processImage } = require("../tensor/processingModule");
 
 router.get("/process", (req, res) => {
   const { grayImg, colorImg, outImg } = req.query;
-  // console.log(`Parameters requestes: ${grayImg} , ${colorImg} , ${outImg}`);
+  // console.log(`Parameters requested: ${grayImg} , ${colorImg} , ${outImg}`);
   if (process.env.NODE_ENV === "production") {
     setTimeout(() => {
       res.send({

@@ -25,9 +25,12 @@
   },
   "homepage": "https://github.com/jedluk/tract#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "concurrently": "^3.5.1",
     "express": "^4.16.3",
-    "formidable": "^1.2.1"
+    "formidable": "^1.2.1",
+    "lodash": "^4.17.10",
+    "mongoose": "^4.5.9"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"
