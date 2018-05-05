@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import cv2
 import random
+from Generator import Generator
 
 class ImagePainter:
     R_CHANNEL, G_CHANNEL, B_CHANNEL = (0, 1, 2)
@@ -125,6 +126,9 @@ class ImagePainter:
                 outImg[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
                 outImg[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
                 outImg[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
+        generator = Generator()
+        outImg = generator.Run(5, self.grayImg, self.colorImg, outImg)
+        generator.Close()
         if self.DEV_MODE:
             file.close()
         self.outImg = outImg
