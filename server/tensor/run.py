@@ -2,7 +2,6 @@ import numpy as np
 import sys
 import cv2
 import random
-from Generator import Generator
 
 class ImagePainter:
     R_CHANNEL, G_CHANNEL, B_CHANNEL = (0, 1, 2)
@@ -57,10 +56,10 @@ class ImagePainter:
         self.colorThresholds = self.calculateColorIndividuals(cumHistVecSort)
         if self.DEV_MODE:
             print('color thresholds {}'.format(self.colorThresholds))
-    
+
     # think about minimal variance spread
     def calculateColorIndividuals(self, sortedHist, useMean=False):
-        spread = int(len(sortedHist) / self.clusters) 
+        spread = int(len(sortedHist) / self.clusters)
         thresholds = np.zeros(self.clusters)
         for i in range(0, self.clusters):
             lowerBand = i * spread
@@ -70,7 +69,7 @@ class ImagePainter:
             else:
                 thresholds[i] = np.median(sortedHist[lowerBand:upperBand])
         return thresholds
-    
+
     # randomly pick samples to estimate color being equivalent to threshold - quasi Monte Carlo method
     def findColorTriples(self):
         if not (self.blurImg is None):
@@ -79,7 +78,7 @@ class ImagePainter:
             img = self.colorImg
         heigth, width = (img.shape[0], img.shape[1])
         # r,g,b + clusterId
-        classifiedPixels = np.zeros((self.samples, 4)) 
+        classifiedPixels = np.zeros((self.samples, 4))
         for sample in range(0, self.samples):
             r = img[random.randint(0, heigth - 1), random.randint(0, width - 1), self.R_CHANNEL]
             b = img[random.randint(0, heigth - 1), random.randint(0, width - 1), self.B_CHANNEL]
@@ -126,16 +125,13 @@ class ImagePainter:
                 outImg[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
                 outImg[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
                 outImg[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
-        generator = Generator()
-        outImg = generator.Run(5, self.grayImg, self.colorImg, outImg)
-        generator.Close()
         if self.DEV_MODE:
             file.close()
         self.outImg = outImg
         if save:
             cv2.imwrite(self.outImgPath, self.outImg)
             print("image saved")
-                
+
 def main(**kwargs):
     inputColor, inputGray, clusters = (None, None, 10)
     for key, value in kwargs.items():
@@ -158,7 +154,7 @@ def main(**kwargs):
         imagePainter.findColorThresholds()
         imagePainter.findColorTriples()
         imagePainter.colorGrayImage()
-        
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
