@@ -8,7 +8,7 @@ export default  () => (
   <BrowserRouter>
     <Switch>
       <Route path="/" component={MainView} exact={true} />
-      <Route path="/gallery" component={Gallery} />
+      <Route path="/gallery/:name?" component={Gallery} />
       <Route component={NotFoundPage} />
     </Switch>
   </BrowserRouter>

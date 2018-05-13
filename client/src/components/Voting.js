@@ -55,24 +55,27 @@ export default class Voting extends Component {
           />
         </div>
         <div className="votingIconBox">
-        <FontAwesome
-          name="fas fa-heart"
-          className=""
-          onClick={() => this.updateVote(socials[1])}
-          style={{ color: this.state.activeSocial === socials[1] ? "red" : "" }}
-        />
+          <FontAwesome
+            name="fas fa-heart"
+            className=""
+            onClick={() => this.updateVote(socials[1])}
+            style={{
+              color: this.state.activeSocial === socials[1] ? "red" : ""
+            }}
+          />
         </div>
         <div className="votingIconBox">
-        <FontAwesome
-          name="far fa-smile-o"
-          className=""
-          onClick={() => this.updateVote(socials[2])}
-          style={{
-            color: this.state.activeSocial === socials[2] ? "yellow" : ""
-          }}
-        />
+          <FontAwesome
+            name="far fa-smile-o"
+            className=""
+            onClick={() => this.updateVote(socials[2])}
+            style={{
+              color: this.state.activeSocial === socials[2] ? "yellow" : ""
+            }}
+          />
         </div>
-        <div className="votingFontBox">{10}</div>
+          {/* @TODO read and save from Mongo
+        <div className="votingFontBox">{Math.round(Math.random() * 100)}</div> */}
       </div>
     );
   }

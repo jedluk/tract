@@ -13,10 +13,18 @@ export default class Gallery extends Component {
   }
 
   componentDidMount() {
+    const pathname = this.props.location.pathname;
+    let userImg = null;
+    if(pathname.length > 'gallery/'.length){
+      userImg = pathname.substring(pathname.lastIndexOf('/') + 1);
+    }
     const [current, imgs] = [
       document.querySelector("#current"),
       document.querySelectorAll(".imgs img")
     ];
+    current.src = userImg ? `../img/ready/` : `../img/gallery/`;
+    userImg = userImg || STATIC_IMG_NAMES[Math.round(Math.random() * 3)];
+    current.src += userImg;
     imgs.forEach(img =>
       img.addEventListener("click", e => {
         current.src = e.target.src;
@@ -27,9 +35,7 @@ export default class Gallery extends Component {
         setTimeout(() => current.classList.remove("fade-in"), 500);
       })
     );
-    const randomPic = STATIC_IMG_NAMES[Math.floor(Math.random() * 4)];
-    this.setState({current: randomPic });
-    current.src = `../img/gallery/${randomPic}`;
+    this.setState({current: userImg });
   }
 
   render() {
@@ -38,7 +44,7 @@ export default class Gallery extends Component {
         <div className="container">
           <div className="main-img">
             <img id="current" />
-            <Voting current={this.state.current}/>
+            {/* <Voting current={this.state.current}/> */}
           </div>
           <div className="imgs">
             {this.imgNames.map(imgName => (

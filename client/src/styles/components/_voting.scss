@@ -8,6 +8,7 @@
 }
 
 .votingIconBox {
+  font-size: 1.6rem;
   margin: 0px -2px;
   border-radius: 50%;
   background-color: $light-gray;
@@ -19,16 +20,13 @@
 }
 
 .votingIconBox:hover{
-  z-index: 100;
-  border: 1px solid black;
+  background-color: lighten($light-gray, 10%);
 }
+
 .votingFontBox {
-  font-size: 14px;
-  color: $white;
-  margin: 0px 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-self: center;
+  margin-left: 10px;
+  font-size: 1.4rem;
 }
 
 .fa-thumbs-up {

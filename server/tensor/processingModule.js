@@ -45,8 +45,6 @@ processImage = (grayImg, colorImg, outImg) =>
           outImg,
           data: data.toString()
         });
-      } else {
-        rej(data.toString());
       }
     });
 

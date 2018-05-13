@@ -2,6 +2,7 @@ client/node_modules/*
 client/yarn.lock
 client/public/dist/*
 client/public/fonts/*
+client/public/img/ready
 client22/*
 server/assets/*
 server/db/playground/*

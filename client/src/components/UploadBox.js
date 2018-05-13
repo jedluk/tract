@@ -4,6 +4,7 @@ import uuidv1 from "uuid/v1";
 import axios from "axios";
 import Modal from "./CustomModal";
 import { MODAL_CONTENT_TEXT } from "../utils/stringConstant";
+import { IS_PRODUCTION } from "../utils/api-config";
 
 export default class UploadBox extends Component {
   constructor(props) {
@@ -66,7 +67,7 @@ export default class UploadBox extends Component {
     );
     fileName = `${fileName}${extension}`;
     fd.append(fileName, file);
-    const url = "/upload";
+    const url = IS_PRODUCTION ? "/upload" : "http://localhost:5000/upload";
     axios
       .post(url, fd)
       .then(res => {
