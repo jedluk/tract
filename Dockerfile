@@ -81,8 +81,5 @@ WORKDIR /usr/src/app/client
 RUN npm install
 RUN npm run build:prod
 WORKDIR /usr/src/app
-EXPOSE 5000
-ENV DB_PASSWORD root123
-ENV DB_USER_NAME root
 
 CMD [ "npm", "run", "start" ]
