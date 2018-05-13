@@ -15,7 +15,7 @@ export const IMG_PATH = {
   3: "../img/pencil_mix.jpg"
 }
 export const MAIN_IMG_TEXT = {
-  title: "Deep learning based coloring",
+  title: "Image coloring",
   subtitile: "Refresh appearance of your images in 3 simple steps !"
 }
 export const APP_URL = 'https://mysterious-ocean-98570.herokuapp.com/';

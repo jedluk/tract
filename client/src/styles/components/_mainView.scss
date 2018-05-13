@@ -3,13 +3,13 @@
   background-image: -webkit-linear-gradient(
       to bottom,
       rgba(0, 0, 0, $opacity),
-      rgba(0, 0, 0, 1)
+      rgba(0, 0, 0, $opacity)
     ),
     url("/img/network.jpg");
   background-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, $opacity),
-      rgba(0, 0, 0, 1)
+      rgba(0, 0, 0, $opacity)
     ),
     url("/img/network.jpg");
   background-size: cover;
@@ -18,7 +18,7 @@
 }
 
 header {
-  @include mainImg(0.4);
+  @include mainImg(0.85);
   height: 70vh;
 }
 
@@ -31,23 +31,6 @@ header {
   padding: 20px;
 }
 
-@media (max-width: $breakpoint) {
-  .content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  h1 {
-    font-size: 18px;
-  }
-  h2 {
-    font-size: 14px;
-    max-width: 250px;
-  }
-}
-
 %column-flex-center {
   display: flex;
   flex-direction: column;
@@ -56,10 +39,31 @@ header {
 
 .row {
   @extend %column-flex-center;
-  min-width: 200px;
+  align-items: center;
   width: 100%;
   height: 100%;
-  padding-left: 50px;
+  h1 {
+    background-image: linear-gradient(
+      to right, 
+      rgb(247,237,15),
+      rgb(230,30,15),
+      rgb(145,5,130),
+      rgb(3,171,196),
+      rgb(8,123,214),
+      rgb(1,189,7),
+      rgb(1,81,72),
+      rgb(109,130,135),
+      rgb(91,53,32),
+      rgb(20,10,10)
+    );
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  h2 {
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
 }
 
 footer {

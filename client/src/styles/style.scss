@@ -1,9 +1,15 @@
-@import './base/settings';
-@import './base/base';
-@import './components/mainView';
-@import './components/uploadBox';
-@import './components/runnerBox';
-@import './components/modal';
-@import './components/notFoundPage';
-@import './components/gallery';
-@import './components/voting';
+@import "./abstracts/variables";
+@import "./abstracts/mixins";
+
+@import "./base/settings";
+@import "./base/base";
+@import "./base/base";
+@import "./base/typography";
+
+@import "./components/mainView";
+@import "./components/uploadBox";
+@import "./components/runnerBox";
+@import "./components/modal";
+@import "./components/notFoundPage";
+@import "./components/gallery";
+@import "./components/voting";

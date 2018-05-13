@@ -3,9 +3,32 @@
   bottom: 0px;
   right: 0px;
   margin: 10px;
-  width: 70px;
   display: flex;
   justify-content: space-between;
+}
+
+.votingIconBox {
+  margin: 0px -2px;
+  border-radius: 50%;
+  background-color: $light-gray;
+  min-width: 30px;
+  min-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.votingIconBox:hover{
+  z-index: 100;
+  border: 1px solid black;
+}
+.votingFontBox {
+  font-size: 14px;
+  color: $white;
+  margin: 0px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .fa-thumbs-up {

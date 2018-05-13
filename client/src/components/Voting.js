@@ -27,7 +27,7 @@ export default class Voting extends Component {
         social: null
       };
     });
-    localStorage.setItem("votes",JSON.stringify(data));
+    localStorage.setItem("votes", JSON.stringify(data));
     return data;
   }
 
@@ -45,25 +45,34 @@ export default class Voting extends Component {
 
     return (
       <div className="social">
-        <FontAwesome
-          name="far fa-thumbs-up"
-          onClick={() => this.updateVote(socials[0])}
-          style={{
-            color: this.state.activeSocial === socials[0] ? "blue" : ""
-          }}
-        />
+        <div className="votingIconBox">
+          <FontAwesome
+            name="far fa-thumbs-up"
+            onClick={() => this.updateVote(socials[0])}
+            style={{
+              color: this.state.activeSocial === socials[0] ? "blue" : ""
+            }}
+          />
+        </div>
+        <div className="votingIconBox">
         <FontAwesome
           name="fas fa-heart"
+          className=""
           onClick={() => this.updateVote(socials[1])}
           style={{ color: this.state.activeSocial === socials[1] ? "red" : "" }}
         />
+        </div>
+        <div className="votingIconBox">
         <FontAwesome
           name="far fa-smile-o"
+          className=""
           onClick={() => this.updateVote(socials[2])}
           style={{
             color: this.state.activeSocial === socials[2] ? "yellow" : ""
           }}
         />
+        </div>
+        <div className="votingFontBox">{10}</div>
       </div>
     );
   }
