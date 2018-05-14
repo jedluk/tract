@@ -29,6 +29,10 @@ header {
   justify-content: space-around;
   align-items: center;
   padding: 20px;
+  @include respond(tab-port) {
+    height: 100%;
+    flex-direction: column;
+  }
 }
 
 %column-flex-center {
@@ -58,6 +62,7 @@ header {
     );
     -webkit-background-clip: text;
     color: transparent;
+    text-align: center;
   }
   h2 {
     @include respond(tab-port) {
