@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import uuidv1 from "uuid/v1";
 import UploadBox from "./UploadBox";
 import RunnerBox from "./RunnerBox";
 import {
@@ -16,11 +17,38 @@ export default class MainView extends Component {
       colorImg: null,
       refresh: false
     };
+    this.headerId = uuidv1().slice(8);
     this.setGrayImg = this.setGrayImg.bind(this);
     this.setColorImg = this.setColorImg.bind(this);
     this.refreshBoxes = this.refreshBoxes.bind(this);
   }
-
+  componentDidMount() {
+    const body = document.body;
+    const container = document.getElementById(this.headerId);
+    const abs = Math.abs,
+      sin = Math.sin,
+      round = Math.round;
+    document.addEventListener("mousemove", function(e) {
+      if (window.innerHeight * 0.69 > e.clientY) {
+        const time = new Date().getTime();
+        const color = `rgb(${round(abs(sin(time * 0.002)) * 255)},${round(
+          abs(sin(time * 0.003)) * 255
+        )},${round(abs(sin(time * 0.005)) * 255)})`;
+        const pixelDiv = document.createElement("div");
+        pixelDiv.style.position = "absolute";
+        pixelDiv.style.left = `${e.clientX}px`;
+        pixelDiv.style.top = `${e.clientY}px`;
+        pixelDiv.style.width = "10px";
+        pixelDiv.style.height = "10px";
+        pixelDiv.style.borderRadius = "50px";
+        pixelDiv.style.backgroundColor = color;
+        body.appendChild(pixelDiv);
+        setTimeout(() => {
+          body.removeChild(pixelDiv);
+        }, 800);
+      }
+    });
+  }
   setGrayImg(name) {
     this.setState({ grayImg: name });
   }
@@ -29,14 +57,14 @@ export default class MainView extends Component {
     this.setState({ colorImg: name });
   }
 
-  refreshBoxes(){
+  refreshBoxes() {
     this.setState({ refresh: true });
   }
 
   render() {
     return (
       <div>
-        <header>
+        <header id={this.headerId}>
           <div className="row">
             <h1>{MAIN_IMG_TEXT.title}</h1>
             <h2>{MAIN_IMG_TEXT.subtitile}</h2>
@@ -63,12 +91,9 @@ export default class MainView extends Component {
             src={IMG_PATH[3]}
             refreshBoxes={this.refreshBoxes}
           />
-        </section> 
+        </section>
         <footer>
-          Go to {" "}
-          <Link to="/gallery">
-            gallery
-          </Link>
+          Go to <Link to="/gallery">gallery</Link>
         </footer>
       </div>
     );
