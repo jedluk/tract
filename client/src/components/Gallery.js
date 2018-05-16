@@ -1,36 +1,53 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
-import Voting from './Voting';
+import { connect } from "react-redux";
+import Voting from "./Voting";
 import { Link } from "react-router-dom";
-import { STATIC_IMG_NAMES } from "../utils/stringConstant";
+import axios from "axios";
 
 class Gallery extends Component {
   constructor(props) {
     super(props);
-    this.imgNames = STATIC_IMG_NAMES;
     this.state = {
-      current: null
-    }
+      current: null,
+      imgNames: null
+    };
+    this.changeCurrent = this.changeCurrent.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.props.readyImg);
-    // current.src = userImg ? `../img/ready/` : `../img/gallery/`;
-    // userImg = userImg || STATIC_IMG_NAMES[Math.round(Math.random() * 3)];
-    // current.src += userImg;
-    // imgs.forEach(img =>
-    //   img.addEventListener("click", e => {
-    //     current.src = e.target.src;
-    //     const cutIndex = e.target.src.lastIndexOf("/");
-    //     const currentImg = e.target.src.slice(cutIndex + 1);
-    //     this.setState({ current: currentImg });
-    //     current.classList.add("fade-in");
-    //     setTimeout(() => current.classList.remove("fade-in"), 500);
-    //   })
-    // );
-    // this.setState({current: userImg });
+    let mainImg = null;
+    const readyImg = this.props.img.readyImg;
+    if (readyImg && readyImg.length > 0) {
+      mainImg = readyImg;
+      this.setState({ current: readyImg });
+    } 
+    const url = "/random";
+    axios
+      .get(url)
+      .then(res => {
+        let imgs = res.data;
+        if (mainImg !== null){
+          if(!imgs.some(name => name === mainImg)){
+            imgs[0] = mainImg;
+          }
+        } else {
+          mainImg = imgs[0];
+        }
+        this.setState({ imgNames: imgs, current: mainImg });
+        document.querySelector("#current").src = `../img/gallery/${mainImg}`;
+      })
+      .catch(err => console.log(err));
   }
-
+  
+  changeCurrent(e){
+    current.src = e.target.src;
+    const cutIndex = e.target.src.lastIndexOf("/");
+    const currentImg = e.target.src.slice(cutIndex + 1);
+    this.setState({ current: currentImg });
+    current.classList.add("fade-in");
+    setTimeout(() => current.classList.remove("fade-in"), 500);
+  }
+  
   render() {
     return (
       <div className="galeryBackground">
@@ -40,9 +57,13 @@ class Gallery extends Component {
             {/* <Voting current={this.state.current}/> */}
           </div>
           <div className="imgs">
-            {this.imgNames.map(imgName => (
-              <img key={imgName} src={`../img/gallery/${imgName}`} />
-            ))}
+            {this.state.imgNames ? (
+              this.state.imgNames.map(imgName => (
+                <img onClick={(e) => this.changeCurrent(e)} key={imgName} src={`../img/gallery/${imgName}`} />
+              ))
+            ) : (
+              <p>Loading images...</p>
+            )}
           </div>
         </div>
         <footer>
@@ -59,8 +80,8 @@ class Gallery extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  readyImg: state.img
+const mapStateToProps = state => ({
+  img: state.img
 });
 
 export default connect(mapStateToProps)(Gallery);

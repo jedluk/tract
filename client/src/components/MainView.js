@@ -17,18 +17,18 @@ export default class MainView extends Component {
       colorImg: null,
       refresh: false
     };
-    this.headerId = uuidv1().slice(8);
+    this.headerId = uuidv1().slice(0,8);
     this.setGrayImg = this.setGrayImg.bind(this);
     this.setColorImg = this.setColorImg.bind(this);
     this.refreshBoxes = this.refreshBoxes.bind(this);
   }
+
   componentDidMount() {
-    const body = document.body;
-    const container = document.getElementById(this.headerId);
     const abs = Math.abs,
-      sin = Math.sin,
-      round = Math.round;
-    document.addEventListener("mousemove", function(e) {
+    sin = Math.sin,
+    round = Math.round;
+    const container = document.getElementById(this.headerId);
+    container.addEventListener("mousemove", function(e) {
       if (window.innerHeight * 0.69 > e.clientY) {
         const time = new Date().getTime();
         const color = `rgb(${round(abs(sin(time * 0.002)) * 255)},${round(
@@ -42,10 +42,10 @@ export default class MainView extends Component {
         pixelDiv.style.height = "10px";
         pixelDiv.style.borderRadius = "50px";
         pixelDiv.style.backgroundColor = color;
-        body.appendChild(pixelDiv);
+        container.appendChild(pixelDiv);
         setTimeout(() => {
-          body.removeChild(pixelDiv);
-        }, 800);
+          container.removeChild(pixelDiv);
+        }, 1000);
       }
     });
   }

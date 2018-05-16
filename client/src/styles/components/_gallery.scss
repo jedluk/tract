@@ -16,10 +16,12 @@
 .main-img img,
 .imgs img {
   width: 100%;
+  max-height: 650px;
 }
 
 .main-img {
   position: relative;
+  object-fit: cover;
 }
 
 .imgs {

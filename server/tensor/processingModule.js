@@ -2,13 +2,13 @@ const path = require("path");
 const fs = require("fs");
 const HERE = __dirname;
 const ASSETS_DIR = path.join(HERE, "..", "assets");
-const IMG_DIR = path.join(ASSETS_DIR, "..", "..", "client", "public", "img");
+const IMG_DIR = path.join(HERE, "..", "..","client", "public", "img", "gallery");
 
 processImage = (grayImg, colorImg, outImg) =>
   new Promise((res, rej) => {
     grayImgPath = path.join(ASSETS_DIR, grayImg);
     colorImgPath = path.join(ASSETS_DIR, colorImg);
-    outImgPath = path.join(IMG_DIR, "gallery", outImg);
+    outImgPath = path.join(IMG_DIR, outImg);
 
     if (!fs.existsSync(grayImgPath) || !fs.existsSync(colorImgPath)) {
       rej("Some of requested files do not exist ... ");
@@ -43,13 +43,13 @@ processImage = (grayImg, colorImg, outImg) =>
     });
   });
 
-module.exports = {
-  ASSETS_DIR,
-  processImage
-};
-
 const cleanUp = files => {
   files.forEach(file => {
     fs.unlink(file, () => console.log(`${file} has been removed`));
   });
+};
+
+module.exports = {
+  IMG_DIR,
+  processImage
 };

@@ -146,7 +146,7 @@ def main(**kwargs):
     # explicity show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
-    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters, True)
+    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters, False)
     if 1 == ImagePainter.CLUSTERING:
         imagePainter.findColorsByClusterirng()
         imagePainter.colorGrayImage()

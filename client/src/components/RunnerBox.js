@@ -20,7 +20,7 @@ class RunnerBox extends Component {
 
   handleProcessing() {
     this.setState({ processing: true });
-    const url = "http://localhost:5000/process";
+    const url = "/process";
     axios
       .get(url, {
         params: {

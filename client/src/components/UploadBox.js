@@ -67,7 +67,7 @@ export default class UploadBox extends Component {
     );
     fileName = `${fileName}${extension}`;
     fd.append(fileName, file);
-    const url = "http://localhost:5000/upload";
+    const url = "/upload";
     axios
       .post(url, fd)
       .then(res => {

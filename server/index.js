@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(require("./routes/upload"));
 app.use(require("./routes/process"));
 app.use(require("./routes/votes"));
+app.use(require("./routes/random"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(publicPath));
