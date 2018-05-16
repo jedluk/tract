@@ -49,6 +49,7 @@ export default class MainView extends Component {
       }
     });
   }
+  
   setGrayImg(name) {
     this.setState({ grayImg: name });
   }

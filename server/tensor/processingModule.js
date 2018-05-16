@@ -2,13 +2,13 @@ const path = require("path");
 const fs = require("fs");
 const HERE = __dirname;
 const ASSETS_DIR = path.join(HERE, "..", "assets");
-const IMG_DIR = path.join(ASSETS_DIR, '..', '..', 'client', 'public', 'img');
+const IMG_DIR = path.join(ASSETS_DIR, "..", "..", "client", "public", "img");
 
 processImage = (grayImg, colorImg, outImg) =>
   new Promise((res, rej) => {
     grayImgPath = path.join(ASSETS_DIR, grayImg);
     colorImgPath = path.join(ASSETS_DIR, colorImg);
-    outImgPath = path.join(ASSETS_DIR, "ready", outImg);
+    outImgPath = path.join(IMG_DIR, "gallery", outImg);
 
     if (!fs.existsSync(grayImgPath) || !fs.existsSync(colorImgPath)) {
       rej("Some of requested files do not exist ... ");
@@ -27,20 +27,8 @@ processImage = (grayImg, colorImg, outImg) =>
       `Started processing with params: ${grayImgPath}, ${colorImgPath} , ${outImgPath}`
     );
     process.stdout.on("data", data => {
+      cleanUp([colorImgPath, grayImgPath]);
       if (data.toString().trim() === "image saved") {
-        fs.copyFileSync(
-          outImgPath,
-          path.join(
-            __dirname,
-            "..",
-            "..",
-            "client",
-            "public",
-            "img",
-            "ready",
-            outImg
-          )
-        );
         res({
           outImg,
           data: data.toString()
@@ -49,6 +37,7 @@ processImage = (grayImg, colorImg, outImg) =>
     });
 
     process.stderr.on("data", data => {
+      cleanUp([colorImgPath, grayImgPath]);
       console.log(`Error during executing python script ${data.toString()}`);
       rej(data.toString());
     });
@@ -57,4 +46,10 @@ processImage = (grayImg, colorImg, outImg) =>
 module.exports = {
   ASSETS_DIR,
   processImage
+};
+
+const cleanUp = files => {
+  files.forEach(file => {
+    fs.unlink(file, () => console.log(`${file} has been removed`));
+  });
 };

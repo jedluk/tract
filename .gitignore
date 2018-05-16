@@ -3,6 +3,7 @@ client/yarn.lock
 client/public/dist/*
 client/public/fonts/*
 client/public/img/ready
+client/public/img/gallery
 client22/*
 server/assets/*
 server/db/playground/*

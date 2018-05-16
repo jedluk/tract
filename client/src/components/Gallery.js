@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import Voting from './Voting';
 import { Link } from "react-router-dom";
 import { STATIC_IMG_NAMES } from "../utils/stringConstant";
 
-export default class Gallery extends Component {
+class Gallery extends Component {
   constructor(props) {
     super(props);
     this.imgNames = STATIC_IMG_NAMES;
@@ -13,29 +14,21 @@ export default class Gallery extends Component {
   }
 
   componentDidMount() {
-    const pathname = this.props.location.pathname;
-    let userImg = null;
-    if(pathname.length > 'gallery/'.length){
-      userImg = pathname.substring(pathname.lastIndexOf('/') + 1);
-    }
-    const [current, imgs] = [
-      document.querySelector("#current"),
-      document.querySelectorAll(".imgs img")
-    ];
-    current.src = userImg ? `../img/ready/` : `../img/gallery/`;
-    userImg = userImg || STATIC_IMG_NAMES[Math.round(Math.random() * 3)];
-    current.src += userImg;
-    imgs.forEach(img =>
-      img.addEventListener("click", e => {
-        current.src = e.target.src;
-        const cutIndex = e.target.src.lastIndexOf("/");
-        const currentImg = e.target.src.slice(cutIndex + 1);
-        this.setState({ current: currentImg });
-        current.classList.add("fade-in");
-        setTimeout(() => current.classList.remove("fade-in"), 500);
-      })
-    );
-    this.setState({current: userImg });
+    console.log(this.props.readyImg);
+    // current.src = userImg ? `../img/ready/` : `../img/gallery/`;
+    // userImg = userImg || STATIC_IMG_NAMES[Math.round(Math.random() * 3)];
+    // current.src += userImg;
+    // imgs.forEach(img =>
+    //   img.addEventListener("click", e => {
+    //     current.src = e.target.src;
+    //     const cutIndex = e.target.src.lastIndexOf("/");
+    //     const currentImg = e.target.src.slice(cutIndex + 1);
+    //     this.setState({ current: currentImg });
+    //     current.classList.add("fade-in");
+    //     setTimeout(() => current.classList.remove("fade-in"), 500);
+    //   })
+    // );
+    // this.setState({current: userImg });
   }
 
   render() {
@@ -65,3 +58,9 @@ export default class Gallery extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  readyImg: state.img
+});
+
+export default connect(mapStateToProps)(Gallery);

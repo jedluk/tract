@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import FontAwesome from "react-fontawesome";
 import axios from "axios";
 import uuidv1 from "uuid/v1";
 import { IS_PRODUCTION } from "../utils/api-config";
+import { setReadyImage } from '../actions/img';
 
 class RunnerBox extends Component {
   constructor(props) {
@@ -14,12 +16,11 @@ class RunnerBox extends Component {
       readyImg: null
     };
     this.handleProcessing = this.handleProcessing.bind(this);
-    this.goToGallery = this.goToGallery.bind(this);
   }
 
   handleProcessing() {
     this.setState({ processing: true });
-    const url = "/process";
+    const url = "http://localhost:5000/process";
     axios
       .get(url, {
         params: {
@@ -30,17 +31,10 @@ class RunnerBox extends Component {
       })
       .then(res => {
         let readyImg = res.data.outImg;
-        readyImg = `../img/ready/${readyImg}`;
-        this.setState({ readyImg: readyImg });
+        this.setState({ readyImg: `../img/gallery/${readyImg}`});
+        this.props.dispatch(setReadyImage(readyImg));
       })
       .catch(err => console.log(err));
-  }
-
-  goToGallery() {
-    const imgName = this.state.readyImg.slice(
-      - (this.imageNameLength + ".jpg".length)
-    );
-    this.props.history.push(`/gallery/${imgName}`);
   }
 
   render() {
@@ -51,7 +45,7 @@ class RunnerBox extends Component {
       <div className="uploadBox">
         {this.props.grayImg && this.props.colorImg ? (
           this.state.readyImg ? (
-            <div className="readyImageBox" onClick={this.goToGallery}>
+            <div className="readyImageBox" onClick={() => this.props.history.push("/gallery")}>
               <img src={this.state.readyImg} width="200px" alt="" />
             </div>
           ) : (
@@ -79,4 +73,4 @@ class RunnerBox extends Component {
   }
 }
 
-export default withRouter(RunnerBox);
+export default withRouter(connect()(RunnerBox));
