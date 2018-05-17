@@ -33,7 +33,8 @@ class ImagePainter:
         processingImage = np.float32(processingImage)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
         K = self.clusters
-        centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
+        centers = cv2.kmeans(processingImage,K,criteria,10, 0)[2]
+        # centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
         self.estimatedColors = centers
         if self.DEV_MODE:
             print(self.estimatedColors)
