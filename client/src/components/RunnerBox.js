@@ -19,10 +19,12 @@ class RunnerBox extends Component {
   }
 
   handleProcessing() {
+    const timeout = 5 * 60 * 1000;
     this.setState({ processing: true });
     const url = "/process";
     axios
       .get(url, {
+        timeout,
         params: {
           grayImg: this.props.grayImg,
           colorImg: this.props.colorImg,

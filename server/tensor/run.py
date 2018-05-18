@@ -28,13 +28,16 @@ class ImagePainter:
             self.colorThresholds = np.zeros(self.clusters)
 
     def findColorsByClusterirng(self):
+        centers = None
         processingImage = self.colorImg
         processingImage = processingImage.reshape((-1,3))
         processingImage = np.float32(processingImage)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
         K = self.clusters
-        centers = cv2.kmeans(processingImage,K,criteria,10, 0)[2]
-        # centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
+        if cv2.__version__.startswith("2."):
+            centers = cv2.kmeans(processingImage,K,criteria,10, 0)[2]
+        else:
+            centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
         self.estimatedColors = centers
         if self.DEV_MODE:
             print(self.estimatedColors)
