@@ -32,6 +32,7 @@
     "formidable": "^1.2.1",
     "lodash": "^4.17.10",
     "mongoose": "^4.5.9",
+    "socket.io": "^2.1.1",
     "winston": "^3.0.0"
   },
   "devDependencies": {
