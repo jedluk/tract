@@ -1,15 +1,15 @@
 {
   "name": "tract",
   "version": "1.0.0",
-  "description": "NodeJS/React/Python/Tensorflow experimental project",
-  "main": "index.js",
+  "description": "Just Tract.",
+  "main": "server.js",
   "engines": {
     "node": "8.5.0",
     "npm": "5.3.0"
   },
   "scripts": {
-    "start": "node server/index.js",
-    "server": "nodemon server/index.js",
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
     "client": "npm run dev-server --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build:prod --prefix client"
@@ -27,10 +27,12 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "concurrently": "^3.5.1",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "formidable": "^1.2.1",
     "lodash": "^4.17.10",
-    "mongoose": "^4.5.9"
+    "mongoose": "^4.5.9",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"
