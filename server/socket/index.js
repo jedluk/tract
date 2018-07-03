@@ -1,4 +1,5 @@
 const processImage = require("./processing");
+const logger = require("../config/logger");
 
 module.exports = io => {
   io.on("connection", socket => {
@@ -8,7 +9,7 @@ module.exports = io => {
           socket.emit("finished processing", data);
         })
         .catch(err => {
-          socket.emit("error", err);
+          logger.error(err);
         });
     });
   });

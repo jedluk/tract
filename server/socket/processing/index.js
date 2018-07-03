@@ -8,6 +8,7 @@ const GALLERY = path.join(
   HERE,
   "..",
   "..",
+  "..",
   "client",
   "public",
   "img",

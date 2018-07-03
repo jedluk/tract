@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const path = require("path");
-const publicPath = path.join(__dirname, "..", "client", "public");
+const publicPath = path.join(__dirname, "..", "..", "client", "public");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,10 +16,12 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(require('./routes'))
-// app.use(express.static(publicPath));
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(publicPath, "index.html"));
-// });
+app.use(require("./routes"));
+app.use(require('./middleware/errorHandler'));
+app.use(express.static(publicPath));
+app.use("/ready", express.static(path.join(publicPath, "img", "gallery")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
 
 module.exports = app;
