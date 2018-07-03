@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { reset } from "../actions/img";
 
 class Gallery extends Component {
   constructor(props) {
@@ -12,19 +13,35 @@ class Gallery extends Component {
       current: null
     };
     this.changeCurrent = this.changeCurrent.bind(this);
+    this.previousExist = this.previousExist.bind(this);
+    this.loadPrevious = this.loadPrevious.bind(this);
   }
 
   componentDidMount() {
-    let mainImg = null;
     if (this.props.readyImg) {
-      mainImg = this.props.readyImg;
-      this.sampleImages.shift();
-      this.sampleImages.unshift(mainImg);
-    } else {
-      mainImg = this.sampleImages[Math.ceil(Math.random() * this.sampleImages.length - 1)];
+      this.loadPrevious();
+      this.sampleImages = [...this.sampleImages.slice(1), this.props.readyImg];
+      this.props.reset();
+    } else if (this.previousExist()) {
+      this.loadPrevious();
     }
+    const mainImg =
+      this.props.readyImg ||
+      this.sampleImages[
+        Math.ceil(Math.random() * this.sampleImages.length - 1)
+      ];
     this.setState({ current: mainImg });
     document.querySelector("#current").src = `/ready/${mainImg}`;
+  }
+  
+  previousExist() {
+    return this.props.previous.length >= 1
+  }
+
+  loadPrevious(){
+    this.props.previous.forEach(
+      img => (this.sampleImages = [...this.sampleImages.slice(1), img])
+    );
   }
 
   changeCurrent(e) {
@@ -68,7 +85,15 @@ class Gallery extends Component {
 }
 
 const mapStateToProps = state => ({
-  readyImg: state.img.readyImg
+  readyImg: state.img.readyImg,
+  previous: state.img.previous
 });
 
-export default connect(mapStateToProps)(Gallery);
+const mapDispatchToProps = dispatch => ({
+  reset: () => dispatch(reset())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Gallery);

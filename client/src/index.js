@@ -13,8 +13,8 @@ import "./styles/style.scss";
 
 export const socket = io();
 
-const middleware = applyMiddleware(logger);
-const store = createStore(rootReducer, middleware);
+// const middleware = applyMiddleware(logger);
+const store = createStore(rootReducer);
 
 emmiter(socket, store);
 

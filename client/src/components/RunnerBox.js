@@ -15,6 +15,8 @@ class RunnerBox extends Component {
     this.handleProcessing = this.handleProcessing.bind(this);
   }
 
+  
+
   handleProcessing() {
     this.props.process();
     this.setState({ processing: true });
