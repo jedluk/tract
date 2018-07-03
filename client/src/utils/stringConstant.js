@@ -2,6 +2,7 @@ export const MODAL_TITLE = 'Oooooooops!';
 export const MODAL_CONTENT_TEXT = {
   MUL_INFO: 'It looks like you\'ve tried to upload more than one image per time. Please try with single image :)',
   EXT_INFO: 'It looks like you\'ve tried to upload unsupported file type. Please add photo in PNG, JPG or TIFF format',
+  ERR_SIZE: 'Maximum file size is 1 MB',
   ERR_UPL: 'Something went wrong during uploading an image. Please try one more time.'
 }
 export const STEP_DESCRIPTION = {

@@ -72,11 +72,14 @@ class UploadBox extends Component {
           this.props.setColor(name);
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        const { message: msg } = error.response.data;
+        const modalText = msg.toLowerCase().match(/too large/)
+          ? MODAL_CONTENT_TEXT.ERR_SIZE
+          : MODAL_CONTENT_TEXT.ERR_UPL;
         this.setState({
-          modal: true,
-          modalText: MODAL_CONTENT_TEXT.ERR_UPL
+          modalText,
+          modal: true
         });
       });
   }

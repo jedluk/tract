@@ -4,24 +4,15 @@ import { withRouter } from "react-router-dom";
 import FontAwesome from "react-fontawesome";
 import axios from "axios";
 import uuidv1 from "uuid/v1";
-import { IS_PRODUCTION } from "../utils/api-config";
 import { setReadyImage, processImage } from "../actions/img";
 
 class RunnerBox extends Component {
   constructor(props) {
     super(props);
-    this.imageNameLength = 8;
     this.state = {
       processing: false
     };
     this.handleProcessing = this.handleProcessing.bind(this);
-  }
-
-  getSnapshotBeforeUpdate(prevProps, prevState) {
-    if(this.props.readyImg){
-      console.log('finished processing');
-      this.setState({ processing: false });
-    }
   }
 
   handleProcessing() {
@@ -41,7 +32,7 @@ class RunnerBox extends Component {
               className="readyImageBox"
               onClick={() => this.props.history.push("/gallery")}
             >
-              <img src={this.props.readyImg} width="200px" alt="" />
+              <img src={`/ready/${this.props.readyImg}`} width="200px" alt="" />
             </div>
           ) : (
             <div onClick={this.handleProcessing}>

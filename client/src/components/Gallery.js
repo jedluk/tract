@@ -7,39 +7,27 @@ import axios from "axios";
 class Gallery extends Component {
   constructor(props) {
     super(props);
+    this.sampleImages = ["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg"];
     this.state = {
-      current: null,
-      imgNames: null
+      current: null
     };
     this.changeCurrent = this.changeCurrent.bind(this);
   }
 
   componentDidMount() {
     let mainImg = null;
-    const readyImg = this.props.img.readyImg;
-    if (readyImg && readyImg.length > 0) {
-      mainImg = readyImg;
-      this.setState({ current: readyImg });
-    } 
-    const url = "/random";
-    axios
-      .get(url)
-      .then(res => {
-        let imgs = res.data;
-        if (mainImg !== null){
-          if(!imgs.some(name => name === mainImg)){
-            imgs[0] = mainImg;
-          }
-        } else {
-          mainImg = imgs[0];
-        }
-        this.setState({ imgNames: imgs, current: mainImg });
-        document.querySelector("#current").src = `../img/gallery/${mainImg}`;
-      })
-      .catch(err => console.log(err));
+    if (this.props.readyImg) {
+      mainImg = this.props.readyImg;
+      this.sampleImages.shift();
+      this.sampleImages.unshift(mainImg);
+    } else {
+      mainImg = this.sampleImages[Math.ceil(Math.random() * this.sampleImages.length - 1)];
+    }
+    this.setState({ current: mainImg });
+    document.querySelector("#current").src = `/ready/${mainImg}`;
   }
-  
-  changeCurrent(e){
+
+  changeCurrent(e) {
     current.src = e.target.src;
     const cutIndex = e.target.src.lastIndexOf("/");
     const currentImg = e.target.src.slice(cutIndex + 1);
@@ -47,23 +35,22 @@ class Gallery extends Component {
     current.classList.add("fade-in");
     setTimeout(() => current.classList.remove("fade-in"), 500);
   }
-  
+
   render() {
     return (
       <div className="galeryBackground">
         <div className="container">
           <div className="main-img">
             <img id="current" />
-            {/* <Voting current={this.state.current}/> */}
           </div>
           <div className="imgs">
-            {this.state.imgNames ? (
-              this.state.imgNames.map(imgName => (
-                <img onClick={(e) => this.changeCurrent(e)} key={imgName} src={`../img/gallery/${imgName}`} />
-              ))
-            ) : (
-              <p>Loading images...</p>
-            )}
+            {this.sampleImages.map(imgName => (
+              <img
+                onClick={e => this.changeCurrent(e)}
+                key={imgName}
+                src={`/ready/${imgName}`}
+              />
+            ))}
           </div>
         </div>
         <footer>
@@ -81,7 +68,7 @@ class Gallery extends Component {
 }
 
 const mapStateToProps = state => ({
-  img: state.img
+  readyImg: state.img.readyImg
 });
 
 export default connect(mapStateToProps)(Gallery);

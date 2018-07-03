@@ -13,49 +13,45 @@ export default class MainView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      grayImg: null,
-      colorImg: null,
       refresh: false
     };
-    this.headerId = uuidv1().slice(0,8);
-    this.setGrayImg = this.setGrayImg.bind(this);
-    this.setColorImg = this.setColorImg.bind(this);
+    this.headerId = uuidv1().slice(0, 8);
     this.refreshBoxes = this.refreshBoxes.bind(this);
+    this.generateBlob = this.generateBlob.bind(this);
   }
 
   componentDidMount() {
-    const abs = Math.abs,
-    sin = Math.sin,
-    round = Math.round;
     const container = document.getElementById(this.headerId);
-    container.addEventListener("mousemove", function(e) {
-      if (window.innerHeight * 0.69 > e.clientY) {
-        const time = new Date().getTime();
-        const color = `rgb(${round(abs(sin(time * 0.002)) * 255)},${round(
-          abs(sin(time * 0.003)) * 255
-        )},${round(abs(sin(time * 0.005)) * 255)})`;
-        const pixelDiv = document.createElement("div");
-        pixelDiv.style.position = "absolute";
-        pixelDiv.style.left = `${e.clientX}px`;
-        pixelDiv.style.top = `${e.clientY}px`;
-        pixelDiv.style.width = "10px";
-        pixelDiv.style.height = "10px";
-        pixelDiv.style.borderRadius = "50px";
-        pixelDiv.style.backgroundColor = color;
-        container.appendChild(pixelDiv);
-        setTimeout(() => {
-          container.removeChild(pixelDiv);
-        }, 1000);
+    const generateBlob = this.generateBlob;
+    container.addEventListener("mousemove", function(evt) {
+      if (window.innerHeight * 0.69 > evt.clientY) {
+        generateBlob(evt, container);
       }
     });
   }
-  
-  setGrayImg(name) {
-    this.setState({ grayImg: name });
+
+  generateBlob(e, container) {
+    const time = new Date().getTime();
+    const color = `rgb(${this.genColor(time, 0.002)}, ${this.genColor(
+      time,
+      0.003
+    )}, ${this.genColor(time, 0.005)})`;
+    const pixelDiv = document.createElement("div");
+    pixelDiv.style.position = "absolute";
+    pixelDiv.style.left = `${e.clientX}px`;
+    pixelDiv.style.top = `${e.clientY}px`;
+    pixelDiv.style.width = "10px";
+    pixelDiv.style.height = "10px";
+    pixelDiv.style.borderRadius = "50px";
+    pixelDiv.style.backgroundColor = color;
+    container.appendChild(pixelDiv);
+    setTimeout(() => {
+      container.removeChild(pixelDiv);
+    }, 1000);
   }
 
-  setColorImg(name) {
-    this.setState({ colorImg: name });
+  genColor(time, factor) {
+    return Math.round(Math.abs(Math.sin(time * factor)) * 255);
   }
 
   refreshBoxes() {
@@ -76,13 +72,11 @@ export default class MainView extends Component {
             gray={true}
             text={STEP_DESCRIPTION[1]}
             src={IMG_PATH[1]}
-            setGrayImg={this.setGrayImg}
             refresh={this.state.refresh}
           />
           <UploadBox
             text={STEP_DESCRIPTION[2]}
             src={IMG_PATH[2]}
-            setColorImg={this.setColorImg}
             refresh={this.state.refresh}
           />
           <RunnerBox

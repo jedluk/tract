@@ -37,7 +37,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 0 $m-size;
+  margin: $m-size;
   color: $light-gray;
 }
 
@@ -48,7 +48,7 @@
 .modal__body {
   font-size: 2rem;
   font-weight: 500; 
-  margin: 0 0 $l-size 0;
+  margin-left: $s-size;
   // word-break: break-all;
 }
 
