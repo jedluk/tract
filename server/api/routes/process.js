@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const router = express.Router();
 const path = require("path");
-const { processImage } = require("../tensor/processingModule");
+const { processImage } = require("../../services/tensor/processingModule");
 const DOCKER_IS_NOT_WORKING = false;
 
 router.get("/process", (req, res) => {
