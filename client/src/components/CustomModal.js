@@ -16,7 +16,7 @@ export default ({ show, handleModalClose, text }) => (
         <FontAwesome name="far fa-image" size="3x" style={{ color: "#abc" }} />
       </div>
       <div>
-        <p className="moda__body">{ text }</p>
+        <p className="modal__body">{ text }</p>
       </div>
     </div>
     <button onClick={handleModalClose} className="modal__button">

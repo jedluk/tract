@@ -1,42 +1,32 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import FontAwesome from "react-fontawesome";
 import axios from "axios";
 import uuidv1 from "uuid/v1";
 import { IS_PRODUCTION } from "../utils/api-config";
-import { setReadyImage } from '../actions/img';
+import { setReadyImage, processImage } from "../actions/img";
 
 class RunnerBox extends Component {
   constructor(props) {
     super(props);
     this.imageNameLength = 8;
     this.state = {
-      processing: false,
-      readyImg: null
+      processing: false
     };
     this.handleProcessing = this.handleProcessing.bind(this);
   }
 
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    if(this.props.readyImg){
+      console.log('finished processing');
+      this.setState({ processing: false });
+    }
+  }
+
   handleProcessing() {
-    const timeout = 5 * 60 * 1000;
+    this.props.process();
     this.setState({ processing: true });
-    const url = "/process";
-    axios
-      .get(url, {
-        timeout,
-        params: {
-          grayImg: this.props.grayImg,
-          colorImg: this.props.colorImg,
-          outImg: `${uuidv1().slice(0, this.imageNameLength)}.jpg`
-        }
-      })
-      .then(res => {
-        let readyImg = res.data.outImg;
-        this.setState({ readyImg: `../img/gallery/${readyImg}`});
-        this.props.dispatch(setReadyImage(readyImg));
-      })
-      .catch(err => console.log(err));
   }
 
   render() {
@@ -46,9 +36,12 @@ class RunnerBox extends Component {
     return (
       <div className="uploadBox">
         {this.props.grayImg && this.props.colorImg ? (
-          this.state.readyImg ? (
-            <div className="readyImageBox" onClick={() => this.props.history.push("/gallery")}>
-              <img src={this.state.readyImg} width="200px" alt="" />
+          this.props.readyImg ? (
+            <div
+              className="readyImageBox"
+              onClick={() => this.props.history.push("/gallery")}
+            >
+              <img src={this.props.readyImg} width="200px" alt="" />
             </div>
           ) : (
             <div onClick={this.handleProcessing}>
@@ -65,7 +58,7 @@ class RunnerBox extends Component {
         )}
         <h3>
           {this.state.processing
-            ? this.state.readyImg
+            ? this.props.readyImg
               ? ""
               : "Processing image..."
             : this.props.text}
@@ -75,4 +68,19 @@ class RunnerBox extends Component {
   }
 }
 
-export default withRouter(connect()(RunnerBox));
+const mapStateToProps = state => ({
+  grayImg: state.img.grayImg,
+  colorImg: state.img.colorImg,
+  readyImg: state.img.readyImg
+});
+
+const mapDispatchToProps = dispatch => ({
+  process: () => dispatch(processImage())
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RunnerBox)
+);

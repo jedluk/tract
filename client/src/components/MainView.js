@@ -86,8 +86,6 @@ export default class MainView extends Component {
             refresh={this.state.refresh}
           />
           <RunnerBox
-            grayImg={this.state.grayImg}
-            colorImg={this.state.colorImg}
             text={STEP_DESCRIPTION[3]}
             src={IMG_PATH[3]}
             refreshBoxes={this.refreshBoxes}

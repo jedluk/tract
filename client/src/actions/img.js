@@ -1,5 +1,25 @@
-export const ACTION_SET_READY_IMAGE = "SET_READY_IMAGE";
-export const setReadyImage = image => ({
-  type: ACTION_SET_READY_IMAGE,
-  image
+export const ACTIONS = Object.freeze({
+  SET_GRAY: "SET_GRAY",
+  SET_COLOR: "SET_COLOR",
+  SET_READY: "SET_READY",
+  PROCESS: "PROCESS"
+});
+
+export const setGrayImage = name => ({
+  type: ACTIONS.SET_GRAY,
+  name
+});
+
+export const setColorImage = name => ({
+  type: ACTIONS.SET_COLOR,
+  name
+});
+
+export const setReadyImage = name => ({
+  type: ACTIONS.SET_READY,
+  name
+});
+
+export const processImage = () => ({
+  type: ACTIONS.PROCESS
 });

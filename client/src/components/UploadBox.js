@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import { connect } from "react-redux";
 import uuidv1 from "uuid/v1";
 import axios from "axios";
 import Modal from "./CustomModal";
 import { MODAL_CONTENT_TEXT } from "../utils/stringConstant";
-import { IS_PRODUCTION } from "../utils/api-config";
+import { setGrayImage, setColorImage } from "../actions/img";
 
-export default class UploadBox extends Component {
+class UploadBox extends Component {
   constructor(props) {
     super(props);
     this.boxID = uuidv1().slice(0, 8);
@@ -58,27 +59,21 @@ export default class UploadBox extends Component {
 
   handleUploadFile(file, idx) {
     const fd = new FormData();
-    let fileName = uuidv1().slice(0, 8);
-    if (this.props.gray) {
-      fileName = `black_${fileName}`;
-    }
-    const extension = file.name.slice(
-      -(file.name.length - file.name.lastIndexOf("."))
-    );
-    fileName = `${fileName}${extension}`;
-    fd.append(fileName, file);
+    fd.append("file", file, this.props.gray ? `gray_${file.name}` : file.name);
     const url = "/upload";
     axios
       .post(url, fd)
       .then(res => {
+        const { fileName: name } = res.data;
         this.setState({ uploaded: true });
         if (this.props.gray) {
-          this.props.setGrayImg(fileName);
+          this.props.setGray(name);
         } else {
-          this.props.setColorImg(fileName);
+          this.props.setColor(name);
         }
       })
       .catch(err => {
+        console.log(err);
         this.setState({
           modal: true,
           modalText: MODAL_CONTENT_TEXT.ERR_UPL
@@ -128,3 +123,15 @@ export default class UploadBox extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setColor: name => dispatch(setColorImage(name)),
+    setGray: name => dispatch(setGrayImage(name))
+  };
+};
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(UploadBox);
