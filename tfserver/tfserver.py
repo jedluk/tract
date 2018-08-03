@@ -1,40 +1,43 @@
-from flask import Flask, request
-from flask_socketio import SocketIO, emit
-import logging
-from logging.handlers import RotatingFileHandler
+from flask import Flask, request, jsonify
+from waitress import serve
 from model import load, predict
 import base64
 import io
 from PIL import Image
 import numpy as np
 
-PORT = 6000
+PORT = 4000
 
 app = Flask(__name__)
-socketio = SocketIO(app)
-clients = []
+sess, tensors = load()
 
-@socketio.on('connect')
-def handle_connect():
-    clients.append(request.sid)
-    send_message(clients[0], "Connected")
+@app.route('/')
+def index():
+    return 'Index'
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    clients.remove(request.sid)
+@app.errorhandler(404)
+def url_error(e):
+    return """
+    Wrong URL!
+    <pre>{}</pre>""".format(e), 404
 
-@socketio.on('process')
-def process(data_gray, data_color, socketID):
-    image_gray = decode(data_gray)
-    image_color = decode(data_color)
+@app.errorhandler(500)
+def server_error(e):
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+
+@app.route('/api', methods=['POST'])
+def api():
+    print('processing')
+    input_data = request.json
+    image_gray = decode(input_data['gray'])
+    image_color = decode(input_data['color'])
     output = predict(image_gray, image_color, sess, tensors)
-    data_output = encode(output)
-
-    emit('processed', {'image': str(data_output)[2:-1], 'socketID': socketID})
-
-def send_message(client_id, message):
-    if client_id is not None:
-        socketio.emit('message', message, room=client_id)
+    output_data = encode(output)
+    response = jsonify({'img':output_data})
+    return response
 
 def decode(img):
     img = base64.b64decode(img)
@@ -46,12 +49,8 @@ def encode(img):
     buffer = io.BytesIO()
     Image.fromarray(img).save(buffer, format='JPEG')
     im_data = buffer.getvalue()
-    return base64.b64encode(im_data)
+    return str(base64.b64encode(im_data))[2:-1]
 
 if __name__ == '__main__':
-    handler = RotatingFileHandler('output.log', maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.INFO)
-    app.logger.addHandler(handler)
-    sess, tensors = load()
-    socketio.run(app, port=PORT)
-    app.logger.info('tfserver started')
+    print('tfserver starting')
+    serve(app, port=PORT, host='0.0.0.0', threads=1)

@@ -1,24 +1,34 @@
 const {loadImages, saveImage} = require("./processing");
 const logger = require("../config/logger");
+const request = require("request");
 
-module.exports = (io, tfServer) => {
+const TFURL = process.env.TFSERVER || "http://127.0.0.1:4000/api";
+
+function sendRequest(data, socket) {
+  request.post(
+    TFURL,
+    data,
+    function (error, response, body) {
+      if(!error && response.statusCode == 200) {
+        saveImage(body.img, (outImgName) => {
+          socket.emit("finished processing", {outImgName: outImgName});
+          logger.info(`Sent image to client: ${outImgName}`);
+        });
+      }
+      else {
+        logger.info(`Request failed`);
+      };
+    }
+)};
+
+module.exports = (io) => {
   io.on("connection", socket => {
     logger.info(`Client connected`);
     socket.on("process", ({ gray, color }) => {
-        logger.info(`Started processing, sending request to tfServer with socketID: ${socket.id}`);
-        loadImages(gray, color, (grayImg, colorImg) => {
-          tfServer.emit("process", grayImg, colorImg, socket.id);
+        loadImages(gray, color, (data) => {
+          logger.info(`Sending request to tfServer with socketID: ${socket.id}`);
+          sendRequest(data, socket)
         });
     });
-  });
-  tfServer.on("processed", data => {
-    logger.info(`tfServer responded, socketID: ${data.socketID}`);
-    saveImage(data, (outImgName) => {
-      io.to(data.socketID).emit("finished processing", {outImgName: outImgName});
-      logger.info(`sent image path to client: ${outImgName}`);
-    });
-  });
-  tfServer.on("message", data => {
-    logger.info(`tfServer sent message: ${data}`);
   });
 };

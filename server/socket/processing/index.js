@@ -22,7 +22,8 @@ function loadImages(grayName, colorName, cb) {
     if (err) throw err;
     fs.readFile(colorName, "base64", (err, colorImg) => {
       if (err) throw err;
-      cb(grayImg, colorImg);
+      var data = {json: {gray: grayImg, color: colorImg}};
+      cb(data);
       cleanUp([colorName, grayName]);
     });
   });
@@ -31,7 +32,7 @@ function loadImages(grayName, colorName, cb) {
 function saveImage(data, cb) {
   const outImgName = `${uuidv4().slice(0, 8)}.jpg`;
   outImgPath = path.join(GALLERY, outImgName)
-  var image = new Buffer(data.image, "base64")
+  var image = new Buffer(data, "base64")
   fs.writeFile(outImgPath, image, (err) => {
     if (err) throw err;
     cb(outImgName);

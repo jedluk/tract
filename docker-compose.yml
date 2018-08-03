@@ -1,0 +1,16 @@
+version: '3'
+services:
+  tfserver:
+    build: ./tfserver
+    networks:
+      - backend
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
