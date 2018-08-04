@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import PIL
 
 def load_graph(frozen_graph_filename):
     with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
@@ -14,6 +15,16 @@ def postprocess(img):
     return (img[0]*255).astype('uint8')
 
 def preprocess(gray, color):
+    downscale = 16
+    (width, height) = gray.size
+    if width%downscale != 0:
+        width = width-width%downscale
+    if height%downscale != 0:
+        height = height-height%downscale
+    gray = gray.resize((width, height))
+    color = color.resize((width, height), resample=PIL.Image.BILINEAR)
+    color = np.asarray(color)
+    gray = np.asarray(gray)
     if len(gray.shape) == 3:
         a, b, c = gray.shape
         if c > 1:

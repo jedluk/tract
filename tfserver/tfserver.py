@@ -4,7 +4,6 @@ from model import load, predict
 import base64
 import io
 from PIL import Image
-import numpy as np
 
 PORT = 4000
 
@@ -42,7 +41,6 @@ def api():
 def decode(img):
     img = base64.b64decode(img)
     img = Image.open(io.BytesIO(img))
-    img = np.asarray(img)
     return img
 
 def encode(img):
