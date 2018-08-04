@@ -29,7 +29,7 @@ def server_error(e):
 
 @app.route('/api', methods=['POST'])
 def api():
-    print('processing')
+    print('Processing images')
     input_data = request.json
     image_gray = decode(input_data['gray'])
     image_color = decode(input_data['color'])
@@ -50,5 +50,5 @@ def encode(img):
     return str(base64.b64encode(im_data))[2:-1]
 
 if __name__ == '__main__':
-    print('tfserver starting')
+    print('TFserver starting')
     serve(app, port=PORT, host='0.0.0.0', threads=1)

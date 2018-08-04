@@ -30,19 +30,26 @@ def preprocess(gray, color):
         if c > 1:
             gray = np.reshape(gray[:,:,0], [1,a,b,1])
         gray = np.reshape(gray, [1,a,b,1])
+    elif len(gray.shape) == 2:
+        a, b = gray.shape
+        gray = np.reshape(gray, [1,a,b,1])
     else:
-        raise ValueError('image shape is invalid')
+        raise ValueError('Image shape is invalid', 'gray', len(gray.shape))
     if len(color.shape) == 3:
         a, b, c = color.shape
         if c > 3:
             color = color[:,:,:3]
         color = np.reshape(color, [1,a,b,3])
     else:
-        raise ValueError('image shape is invalid')
+        raise ValueError('Image shape is invalid', 'color', len(color.shape))
     return gray, color
 
 def predict(gray, color, sess, tensors):
-    gray, color = preprocess(gray, color)
+    try:
+        gray, color = preprocess(gray, color)
+    except ValueError as error:
+        print(error.args)
+        return np.zeros([64,64,3]).astype('uint8')
     output = sess.run(tensors.y, feed_dict={tensors.gray: gray, tensors.color: color})
     return postprocess(output)
 
