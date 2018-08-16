@@ -17,6 +17,10 @@ def postprocess(img):
 def preprocess(gray, color):
     downscale = 16
     (width, height) = gray.size
+    if width*height > 256*256:
+        scale = width*height/(256*256)
+        width = int(width/scale)
+        height = int(height/scale)
     if width%downscale != 0:
         width = width-width%downscale
     if height%downscale != 0:
