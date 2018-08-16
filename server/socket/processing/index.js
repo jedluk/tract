@@ -15,42 +15,29 @@ const GALLERY = path.join(
   "gallery"
 );
 
-processImage = (grayImg, colorImg) =>
-  new Promise((res, rej) => {
-    const outImgName = `${uuidv4().slice(0, 8)}.jpg`;
-    grayImg = path.join(UPLOADS_DIR, grayImg);
-    colorImg = path.join(UPLOADS_DIR, colorImg);
-    outImg = path.join(GALLERY, outImgName);
-
-    if (!fs.existsSync(grayImg) || !fs.existsSync(colorImg)) {
-      rej("Some of requested files do not exist ... ");
-    }
-
-    const { spawn } = require("child_process");
-    const process = spawn("python", [
-      path.join(HERE, "run.py"),
-      `inputGray=${grayImg}`,
-      `inputColor=${colorImg}`,
-      `outImg=${outImg}`,
-      `N=${10}`
-    ]);
-
-    logger.info(
-      `Started processing with params: ${grayImg}, ${colorImg} , ${outImg}`
-    );
-    process.stdout.on("data", data => {
-      cleanUp([colorImg, grayImg]);
-      if (data.toString().trim() === "image saved") {
-        res({ outImgName });
-      }
-    });
-
-    process.stderr.on("data", data => {
-      cleanUp([colorImg, grayImg]);
-      logger.error(`Error during executing python script ${data.toString()}`);
-      rej(data.toString());
+function loadImages(grayName, colorName, cb) {
+  grayName = path.join(UPLOADS_DIR, grayName);
+  colorName = path.join(UPLOADS_DIR, colorName);
+  fs.readFile(grayName, "base64", (err, grayImg) => {
+    if (err) throw err;
+    fs.readFile(colorName, "base64", (err, colorImg) => {
+      if (err) throw err;
+      var data = {json: {gray: grayImg, color: colorImg}};
+      cb(data);
+      cleanUp([colorName, grayName]);
     });
   });
+};
+
+function saveImage(data, cb) {
+  const outImgName = `${uuidv4().slice(0, 8)}.jpg`;
+  outImgPath = path.join(GALLERY, outImgName)
+  var image = new Buffer(data, "base64")
+  fs.writeFile(outImgPath, image, (err) => {
+    if (err) throw err;
+    cb(outImgName);
+  });
+};
 
 const cleanUp = files => {
   files.forEach(file => {
@@ -61,4 +48,4 @@ const cleanUp = files => {
   });
 };
 
-module.exports = processImage;
+module.exports = {loadImages, saveImage};
