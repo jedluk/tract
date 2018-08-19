@@ -2,7 +2,6 @@ FROM mhart/alpine-node:10
 
 ENV NODE_ENV=production
 ENV TFSERVER=http://tfserver:4000/api
-ENV PORT=80
 WORKDIR /tmp
 COPY package.json /tmp/
 RUN npm install
