@@ -1,14 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import Voting from "./Voting";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { reset } from "../actions/img";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { reset } from '../redux/actions/img';
 
 class Gallery extends Component {
   constructor(props) {
     super(props);
-    this.sampleImages = ["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg"];
+    this.sampleImages = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'];
     this.state = {
       current: null
     };
@@ -27,30 +26,26 @@ class Gallery extends Component {
     }
     const mainImg =
       this.props.readyImg ||
-      this.sampleImages[
-        Math.ceil(Math.random() * this.sampleImages.length - 1)
-      ];
+      this.sampleImages[Math.ceil(Math.random() * this.sampleImages.length - 1)];
     this.setState({ current: mainImg });
-    document.querySelector("#current").src = `/ready/${mainImg}`;
-  }
-  
-  previousExist() {
-    return this.props.previous.length >= 1
+    document.querySelector('#current').src = `/ready/${mainImg}`;
   }
 
-  loadPrevious(){
-    this.props.previous.forEach(
-      img => (this.sampleImages = [...this.sampleImages.slice(1), img])
-    );
+  previousExist() {
+    return this.props.previous.length >= 1;
+  }
+
+  loadPrevious() {
+    this.props.previous.forEach(img => (this.sampleImages = [...this.sampleImages.slice(1), img]));
   }
 
   changeCurrent(e) {
     current.src = e.target.src;
-    const cutIndex = e.target.src.lastIndexOf("/");
+    const cutIndex = e.target.src.lastIndexOf('/');
     const currentImg = e.target.src.slice(cutIndex + 1);
     this.setState({ current: currentImg });
-    current.classList.add("fade-in");
-    setTimeout(() => current.classList.remove("fade-in"), 500);
+    current.classList.add('fade-in');
+    setTimeout(() => current.classList.remove('fade-in'), 500);
   }
 
   render() {
@@ -62,11 +57,7 @@ class Gallery extends Component {
           </div>
           <div className="imgs">
             {this.sampleImages.map(imgName => (
-              <img
-                onClick={e => this.changeCurrent(e)}
-                key={imgName}
-                src={`/ready/${imgName}`}
-              />
+              <img onClick={e => this.changeCurrent(e)} key={imgName} src={`/ready/${imgName}`} />
             ))}
           </div>
         </div>
@@ -74,7 +65,7 @@ class Gallery extends Component {
           <div className="goHome">
             go <Link to="/">home</Link>
           </div>
-          Bare awesome free images are taken from{" "}
+          Bare awesome free images are taken from{' '}
           <a href="https://www.pexels.com/" target="_blank">
             pexels
           </a>

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import FontAwesome from "react-fontawesome";
-import { connect } from "react-redux";
-import uuidv1 from "uuid/v1";
-import axios from "axios";
-import Modal from "./CustomModal";
-import { MODAL_CONTENT_TEXT } from "../utils/stringConstant";
-import { setGrayImage, setColorImage } from "../actions/img";
+import React, { Component } from 'react';
+import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
+import uuidv1 from 'uuid/v1';
+import axios from 'axios';
+import Modal from './CustomModal';
+import { MODAL_CONTENT_TEXT } from '../utils/stringConstant';
+import { setGrayImage, setColorImage } from '../redux/actions/img';
 
 class UploadBox extends Component {
   constructor(props) {
@@ -22,15 +22,15 @@ class UploadBox extends Component {
 
   componentDidMount() {
     const box = document.getElementById(this.boxID);
-    box.addEventListener("dragenter", () => {
-      this.setState({ dragActive: true });
-    });
-    box.addEventListener("dragleave", () => {
+    // box.addEventListener('dragenter', () => {
+    //   this.setState({ dragActive: true });
+    // });
+    box.addEventListener('dragleave', () => {
       if (this.state.uploaded !== true) {
         this.setState({ dragActive: false });
       }
     });
-    box.addEventListener("drop", evt => {
+    box.addEventListener('drop', evt => {
       evt.stopPropagation();
       evt.preventDefault();
       const files = evt.dataTransfer.files;
@@ -50,17 +50,17 @@ class UploadBox extends Component {
         }
       }
     });
-    box.addEventListener("dragover", evt => {
+    box.addEventListener('dragover', evt => {
       evt.preventDefault();
       evt.stopPropagation();
-      evt.dataTransfer.dropEffect = "copy";
+      evt.dataTransfer.dropEffect = 'copy';
     });
   }
 
   handleUploadFile(file, idx) {
     const fd = new FormData();
-    fd.append("file", file, this.props.gray ? `gray_${file.name}` : file.name);
-    const url = "/upload";
+    fd.append('file', file, this.props.gray ? `gray_${file.name}` : file.name);
+    const url = '/upload';
     axios
       .post(url, fd)
       .then(res => {
@@ -93,23 +93,28 @@ class UploadBox extends Component {
 
   deduceText() {
     if (this.state.uploaded) {
-      return "Image uploaded sucesfully!";
+      return 'Image uploaded sucesfully!';
     } else if (this.state.dragActive) {
-      return `Drop ${this.props.gray ? "gray" : "color"} image here`;
+      return `Drop ${this.props.gray ? 'gray' : 'color'} image here`;
     } else {
       return this.props.text;
     }
   }
 
   render() {
-    const customBorder = this.state.dragActive ? "customBorder" : "";
+    const customBorder = this.state.dragActive ? 'customBorder' : '';
     const boxClasses = `uploadBox ${customBorder}`;
     const text = this.deduceText();
-    const fontName = this.state.uploaded ? "fas fa-check" : "far fa-image";
-    const fontColor = this.state.uploaded ? "#00C516" : "#abc";
+    const fontName = this.state.uploaded ? 'fas fa-check' : 'far fa-image';
+    const fontColor = this.state.uploaded ? '#00C516' : '#abc';
 
     return (
-      <div id={this.boxID} className={boxClasses}>
+      <div
+        id={this.boxID}
+        className={boxClasses}
+        onDragEnter={() => this.setState({ dragActive: true })}
+        onDragLeave={() => this.setState({})}
+      >
         <Modal
           show={this.state.modal}
           handleModalClose={this.handleModalClose}
@@ -121,7 +126,7 @@ class UploadBox extends Component {
           <img src={this.props.src} width="200px" alt="" />
         )}
         <h3>{text}</h3>
-        <h5>{this.state.dragActive ? "" : "Drop here"}</h5>
+        <h5>{this.state.dragActive ? '' : 'Drop here'}</h5>
       </div>
     );
   }

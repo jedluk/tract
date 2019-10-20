@@ -1,13 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import uuidv1 from "uuid/v1";
-import UploadBox from "./UploadBox";
-import RunnerBox from "./RunnerBox";
-import {
-  STEP_DESCRIPTION,
-  IMG_PATH,
-  MAIN_IMG_TEXT
-} from "../utils/stringConstant";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import uuidv1 from 'uuid/v1';
+import UploadBox from './UploadBox';
+import { makeGlow } from '../utils/glow';
+import RunnerBox from './RunnerBox';
+import { STEP_DESCRIPTION, IMG_PATH, MAIN_IMG_TEXT } from '../utils/stringConstant';
 
 export default class MainView extends Component {
   constructor(props) {
@@ -23,7 +20,7 @@ export default class MainView extends Component {
   componentDidMount() {
     const container = document.getElementById(this.headerId);
     const generateBlob = this.generateBlob;
-    container.addEventListener("mousemove", function(evt) {
+    container.addEventListener('mousemove', function(evt) {
       if (window.innerHeight * 0.69 > evt.clientY) {
         generateBlob(evt, container);
       }
@@ -31,27 +28,11 @@ export default class MainView extends Component {
   }
 
   generateBlob(e, container) {
-    const time = new Date().getTime();
-    const color = `rgb(${this.genColor(time, 0.002)}, ${this.genColor(
-      time,
-      0.003
-    )}, ${this.genColor(time, 0.005)})`;
-    const pixelDiv = document.createElement("div");
-    pixelDiv.style.position = "absolute";
-    pixelDiv.style.left = `${e.clientX}px`;
-    pixelDiv.style.top = `${e.clientY}px`;
-    pixelDiv.style.width = "10px";
-    pixelDiv.style.height = "10px";
-    pixelDiv.style.borderRadius = "50px";
-    pixelDiv.style.backgroundColor = color;
-    container.appendChild(pixelDiv);
+    const glow = makeGlow(e);
+    container.appendChild(glow);
     setTimeout(() => {
-      container.removeChild(pixelDiv);
+      container.removeChild(glow);
     }, 1000);
-  }
-
-  genColor(time, factor) {
-    return Math.round(Math.abs(Math.sin(time * factor)) * 255);
   }
 
   refreshBoxes() {
@@ -74,11 +55,7 @@ export default class MainView extends Component {
             src={IMG_PATH[1]}
             refresh={this.state.refresh}
           />
-          <UploadBox
-            text={STEP_DESCRIPTION[2]}
-            src={IMG_PATH[2]}
-            refresh={this.state.refresh}
-          />
+          <UploadBox text={STEP_DESCRIPTION[2]} src={IMG_PATH[2]} refresh={this.state.refresh} />
           <RunnerBox
             text={STEP_DESCRIPTION[3]}
             src={IMG_PATH[3]}

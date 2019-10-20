@@ -1,10 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import FontAwesome from "react-fontawesome";
-import axios from "axios";
-import uuidv1 from "uuid/v1";
-import { setReadyImage, processImage } from "../actions/img";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import FontAwesome from 'react-fontawesome';
+import { processImage } from '../redux/actions/img';
 
 class RunnerBox extends Component {
   constructor(props) {
@@ -15,25 +13,18 @@ class RunnerBox extends Component {
     this.handleProcessing = this.handleProcessing.bind(this);
   }
 
-  
-
   handleProcessing() {
     this.props.process();
     this.setState({ processing: true });
   }
 
   render() {
-    const icon = this.state.processing
-      ? "fas fa-spinner"
-      : "far fa-play-circle";
+    const icon = this.state.processing ? 'fas fa-spinner' : 'far fa-play-circle';
     return (
       <div className="uploadBox">
         {this.props.grayImg && this.props.colorImg ? (
           this.props.readyImg ? (
-            <div
-              className="readyImageBox"
-              onClick={() => this.props.history.push("/gallery")}
-            >
+            <div className="readyImageBox" onClick={() => this.props.history.push('/gallery')}>
               <img src={`/ready/${this.props.readyImg}`} width="200px" alt="" />
             </div>
           ) : (
@@ -41,7 +32,7 @@ class RunnerBox extends Component {
               <FontAwesome
                 name={icon}
                 size="5x"
-                style={{ color: "#00C516" }}
+                style={{ color: '#00C516' }}
                 spin={this.state.processing}
               />
             </div>
@@ -52,8 +43,8 @@ class RunnerBox extends Component {
         <h3>
           {this.state.processing
             ? this.props.readyImg
-              ? ""
-              : "Processing image..."
+              ? ''
+              : 'Processing image...'
             : this.props.text}
         </h3>
       </div>
@@ -61,11 +52,14 @@ class RunnerBox extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  grayImg: state.img.grayImg,
-  colorImg: state.img.colorImg,
-  readyImg: state.img.readyImg
-});
+const mapStateToProps = state => {
+  console.log(state.getState());
+  return {
+    grayImg: state.img.grayImg,
+    colorImg: state.img.colorImg,
+    readyImg: state.img.readyImg
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   process: () => dispatch(processImage())

@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux';
-import imgReducer from '../reducers/img';
+import imgReducer from './reducers/img';
 
 export default () => {
   const store = createStore(
@@ -7,6 +7,5 @@ export default () => {
       img: imgReducer
     })
   );
-
   return store;
 };
