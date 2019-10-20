@@ -145,7 +145,10 @@ class ImagePainter:
             print("image saved")
 
 
-def main(**kwargs):
+def process_image(**kwargs):
+    required_args = ['inputColor', 'inputGray', 'outImg']
+    if not ['inputColor', 'inputGray', 'outImg'] in kwargs.values():
+        raise AssertionError(f"missing arguments !!! {', '.join(required_args)} must be provided")
     input_color, input_gray, out_img, clusters = None, None, None, 10
     for key, value in kwargs.items():
         if key == 'inputColor':
@@ -173,4 +176,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise SyntaxError("Insufficient arguments")
     else:
-        main(**dict(arg.split('=') for arg in sys.argv[1:]))
+        process_image(**dict(arg.split('=') for arg in sys.argv[1:]))
