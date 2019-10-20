@@ -9,113 +9,113 @@ class ImagePainter:
     DEV_MODE, LOGGING = (0, 0)
     CLUSTERING = 1
 
-    def __init__(self, color, gray, outPath, N, saveGray):
+    def __init__(self, color, gray, out_path, n, save_gray):
         self.colorImg = cv2.cvtColor(cv2.imread(color), cv2.COLOR_BGR2RGB)
         self.grayImg = cv2.imread(gray)
-        self.outImgPath = outPath
-        grayHeight, grayWidth, grayChannels = self.grayImg.shape
-        if grayChannels == 3:
+        self.outImgPath = out_path
+        gray_height, gray_width, gray_channels = self.grayImg.shape
+        if gray_channels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
-        if saveGray:
+        if save_gray:
             cv2.imwrite('gray.jpg', self.grayImg)
-        self.outImg = np.zeros([grayHeight, grayWidth, 3])
-        self.clusters = int(N)
+        self.outImg = np.zeros([save_gray, gray_width, 3])
+        self.clusters = int(n)
         self.estimatedColors = np.zeros([self.clusters, 3])
         self.grayThresholds = np.zeros(self.clusters)
         if not self.CLUSTERING:
-            colorHeight, colorWidth = (
+            color_height, color_width = (
                 self.colorImg.shape[0], self.colorImg.shape[1])
             self.blurImg = None
-            self.samples = int(0.01 * colorHeight * colorWidth)
+            self.samples = int(0.01 * color_height * color_width)
             self.colorThresholds = np.zeros(self.clusters)
 
-    def findColorsByClusterirng(self):
-        processingImage = self.colorImg
-        processingImage = processingImage.reshape((-1, 3))
-        processingImage = np.float32(processingImage)
+    def find_colors_by_clustering(self):
+        processed_image = self.colorImg
+        processed_image = processed_image.reshape((-1, 3))
+        processed_image = np.float32(processed_image)
         criteria = (cv2.TERM_CRITERIA_EPS +
                     cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
         K = self.clusters
-        centers = cv2.kmeans(processingImage, K, criteria, 10, 0)[2]
+        centers = cv2.kmeans(processed_image, K, criteria, 10, 0)[2]
         # centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
         self.estimatedColors = centers
         if self.DEV_MODE:
             print(self.estimatedColors)
 
-    def findColorThresholds(self, useBlur=False):
-        heigth, width = (self.colorImg.shape[0], self.colorImg.shape[1])
-        processingImage = self.colorImg
-        if useBlur:
-            processingImage = cv2.blur(self.colorImg, (10, 10))
-            self.blurImg = processingImage
-        cumHist = np.zeros([heigth, width])
-        for x in range(0, heigth):
+    def find_color_thresholds(self, use_blur=False):
+        height, width = (self.colorImg.shape[0], self.colorImg.shape[1])
+        processing_image = self.colorImg
+        if use_blur:
+            processing_image = cv2.blur(self.colorImg, (10, 10))
+            self.blurImg = processing_image
+        cum_hist = np.zeros([height, width])
+        for x in range(0, height):
             for y in range(0, width):
-                R_value = int(processingImage[x, y, self.B_CHANNEL])
-                G_value = int(processingImage[x, y, self.G_CHANNEL])
-                B_value = int(processingImage[x, y, self.R_CHANNEL])
-                cumHist[[x], [y]] = R_value + B_value + G_value
+                r_value = int(processing_image[x, y, self.B_CHANNEL])
+                g_value = int(processing_image[x, y, self.G_CHANNEL])
+                b_value = int(processing_image[x, y, self.R_CHANNEL])
+                cum_hist[[x], [y]] = r_value + g_value + b_value
 
-        cumHistVecSort = np.sort(cumHist.flatten())
-        self.colorThresholds = self.calculateColorIndividuals(cumHistVecSort)
+        cum_hist_vec_sort = np.sort(cum_hist.flatten())
+        self.colorThresholds = self.calculate_color_individuals(cum_hist_vec_sort)
         if self.DEV_MODE:
             print('color thresholds {}'.format(self.colorThresholds))
 
     # think about minimal variance spread
-    def calculateColorIndividuals(self, sortedHist, useMean=False):
-        spread = int(len(sortedHist) / self.clusters)
+    def calculate_color_individuals(self, sorted_hist, use_mean=False):
+        spread = int(len(sorted_hist) / self.clusters)
         thresholds = np.zeros(self.clusters)
         for i in range(0, self.clusters):
-            lowerBand = i * spread
-            upperBand = (i+1) * spread
-            if useMean:
-                thresholds[i] = int(np.mean(sortedHist[lowerBand:upperBand]))
+            lower_band = i * spread
+            upper_band = (i + 1) * spread
+            if use_mean:
+                thresholds[i] = int(np.mean(sorted_hist[lower_band:upper_band]))
             else:
-                thresholds[i] = np.median(sortedHist[lowerBand:upperBand])
+                thresholds[i] = np.median(sorted_hist[lower_band:upper_band])
         return thresholds
 
     # randomly pick samples to estimate color being equivalent to threshold - quasi Monte Carlo method
-    def findColorTriples(self):
+    def find_color_triples(self):
         if not (self.blurImg is None):
             img = self.blurImg
         else:
             img = self.colorImg
-        heigth, width = (img.shape[0], img.shape[1])
+        height, width = (img.shape[0], img.shape[1])
         # r,g,b + clusterId
-        classifiedPixels = np.zeros((self.samples, 4))
+        classified_pixels = np.zeros((self.samples, 4))
         for sample in range(0, self.samples):
-            r = img[random.randint(0, heigth - 1),
+            r = img[random.randint(0, height - 1),
                     random.randint(0, width - 1), self.R_CHANNEL]
-            b = img[random.randint(0, heigth - 1),
+            b = img[random.randint(0, height - 1),
                     random.randint(0, width - 1), self.B_CHANNEL]
-            g = img[random.randint(0, heigth - 1),
+            g = img[random.randint(0, height - 1),
                     random.randint(0, width - 1), self.G_CHANNEL]
             color = int(r) + int(g) + int(b)
-            clusterId = np.argmin([abs(threshold - color)
-                                   for threshold in self.colorThresholds])
-            classifiedPixels[(sample)] = [r, g, b, clusterId]
+            cluster_id = np.argmin([abs(threshold - color)
+                                    for threshold in self.colorThresholds])
+            classified_pixels[sample] = [r, g, b, cluster_id]
 
-        self.estimatedColors = self.findColorIndividuals(classifiedPixels)
+        self.estimatedColors = self.find_color_individuals(classified_pixels)
         if self.DEV_MODE:
             # print(classifiedPixels)
             print('estimated Colors: \n{}'.format(self.estimatedColors))
 
-    def findColorIndividuals(self, classifiedPixels, useMean=False):
-        CLUSTER_INDEX = 3
+    def find_color_individuals(self, classified_pixels, use_mean=False):
+        cluster_index = 3
         colors = np.zeros([self.clusters, 3])
         for index in range(0, self.clusters):
-            if useMean:
+            if use_mean:
                 triple = np.mean(
-                    classifiedPixels[classifiedPixels[:, CLUSTER_INDEX] == index], axis=0)
+                    classified_pixels[classified_pixels[:, cluster_index] == index], axis=0)
             else:
                 triple = np.median(
-                    classifiedPixels[classifiedPixels[:, CLUSTER_INDEX] == index], axis=0)
-            colors[(index)] = triple[:CLUSTER_INDEX]
+                    classified_pixels[classified_pixels[:, cluster_index] == index], axis=0)
+            colors[index] = triple[:cluster_index]
         return colors
 
-    def colorGrayImage(self, save=True):
+    def color_gray_image(self, save=True):
         height, width = (self.grayImg.shape[0], self.grayImg.shape[1])
-        outImg = np.zeros([height, width, 3])
+        out_img = np.zeros([height, width, 3])
         self.grayThresholds = np.arange(
             int(255 / self.clusters), 256, int(255 / self.clusters))
         if self.LOGGING:
@@ -134,39 +134,39 @@ class ImagePainter:
                         "intensity {}\tclass {}\t diffs\t".format(intensity, idx))
                     # diffs.tofile(file,sep=", ")
                     file.write("\n")
-                outImg[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
-                outImg[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
-                outImg[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
+                out_img[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
+                out_img[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
+                out_img[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
         if self.DEV_MODE:
             file.close()
-        self.outImg = outImg
+        self.outImg = out_img
         if save:
             cv2.imwrite(self.outImgPath, self.outImg)
             print("image saved")
 
 
 def main(**kwargs):
-    inputColor, inputGray, clusters = (None, None, 10)
+    input_color, input_gray, out_img, clusters = None, None, None, 10
     for key, value in kwargs.items():
         if key == 'inputColor':
-            inputColor = value
+            input_color = value
         elif key == 'inputGray':
-            inputGray = value
+            input_gray = value
         elif key == 'N':
             clusters = value
         elif key == 'outImg':
-            outImg = value
-    # explicity show we want to use clustering
+            out_img = value
+    # explicitly show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
-    imagePainter = ImagePainter(inputColor, inputGray, outImg, clusters, False)
+    image_painter = ImagePainter(input_color, input_gray, out_img, clusters, False)
     if 1 == ImagePainter.CLUSTERING:
-        imagePainter.findColorsByClusterirng()
-        imagePainter.colorGrayImage()
+        image_painter.find_colors_by_clustering()
+        image_painter.color_gray_image()
     else:
-        imagePainter.findColorThresholds()
-        imagePainter.findColorTriples()
-        imagePainter.colorGrayImage()
+        image_painter.find_color_thresholds()
+        image_painter.find_color_triples()
+        image_painter.color_gray_image()
 
 
 if __name__ == "__main__":
