@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const path = require('path');
 const { assetsDir } = require('../config/assets');
 
 const app = express();
