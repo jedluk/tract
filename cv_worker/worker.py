@@ -2,6 +2,9 @@ import numpy as np
 import sys
 import cv2
 import random
+from os import getenv
+
+MODE = getenv('MODE', 'development')
 
 
 class ImagePainter:
@@ -57,7 +60,8 @@ class ImagePainter:
                 cum_hist[[x], [y]] = r_value + g_value + b_value
 
         cum_hist_vec_sort = np.sort(cum_hist.flatten())
-        self.colorThresholds = self.calculate_color_individuals(cum_hist_vec_sort)
+        self.colorThresholds = self.calculate_color_individuals(
+            cum_hist_vec_sort)
         if self.DEV_MODE:
             print('color thresholds {}'.format(self.colorThresholds))
 
@@ -69,7 +73,8 @@ class ImagePainter:
             lower_band = i * spread
             upper_band = (i + 1) * spread
             if use_mean:
-                thresholds[i] = int(np.mean(sorted_hist[lower_band:upper_band]))
+                thresholds[i] = int(
+                    np.mean(sorted_hist[lower_band:upper_band]))
             else:
                 thresholds[i] = np.median(sorted_hist[lower_band:upper_band])
         return thresholds
@@ -141,14 +146,18 @@ class ImagePainter:
             file.close()
         self.outImg = out_img
         if save:
-            cv2.imwrite(self.outImgPath, self.outImg)
+            if MODE == 'production':
+                cv2.imwrite('/opt/assets', self.outImg)
+            else:
+                cv2.imwrite(self.outImgPath, self.outImg)
             print("image saved")
 
 
 def process_image(**kwargs):
     required_args = ['inputColor', 'inputGray', 'outImg']
     if not ['inputColor', 'inputGray', 'outImg'] in kwargs.values():
-        raise AssertionError(f"missing arguments !!! {', '.join(required_args)} must be provided")
+        raise AssertionError(
+            f"missing arguments !!! {', '.join(required_args)} must be provided")
     input_color, input_gray, out_img, clusters = None, None, None, 10
     for key, value in kwargs.items():
         if key == 'inputColor':
@@ -162,7 +171,8 @@ def process_image(**kwargs):
     # explicitly show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
-    image_painter = ImagePainter(input_color, input_gray, out_img, clusters, False)
+    image_painter = ImagePainter(
+        input_color, input_gray, out_img, clusters, False)
     if 1 == ImagePainter.CLUSTERING:
         image_painter.find_colors_by_clustering()
         image_painter.color_gray_image()

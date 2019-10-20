@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_socketio import SocketIO, emit
 from worker import process_image
+from os import getenv
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -18,4 +19,5 @@ def handle_process_image(payload):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='localhost', port=6300)
+    port = int(getenv('PORT', 6300))
+    socketio.run(app, port=port)
