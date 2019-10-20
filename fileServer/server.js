@@ -4,6 +4,7 @@ const app = require('./api/app');
 const logger = require('./config/logger');
 
 (async function makeFileServer() {
+  logger.info(`${process.env.NODE_ENV} mode`);
   try {
     await checkPaths();
     const { PORT = 8081 } = process.env;
