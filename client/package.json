@@ -50,8 +50,7 @@
     "style-loader": "^0.21.0",
     "uglify-js": "^3.3.22",
     "uuid": "^3.2.1",
-    "webpack": "3.1.0",
-    "node-sass": "^4.0.0"
+    "webpack": "3.1.0"
   },
   "devDependencies": {
     "jest": "^22.4.3",
