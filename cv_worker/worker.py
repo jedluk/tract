@@ -174,6 +174,6 @@ def process_image(**kwargs):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        raise SyntaxError("Insufficient arguments")
+        raise AssertionError("Insufficient arguments")
     else:
         process_image(**dict(arg.split('=') for arg in sys.argv[1:]))
