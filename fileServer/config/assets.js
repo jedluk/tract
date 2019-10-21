@@ -9,7 +9,7 @@ const mkdir = util.promisify(fs.mkdir);
 const ASSETS_DIR =
   process.env.NODE_ENV === 'production'
     ? path.join(HERE, '..', 'assets')
-    : path.join(HERE, '..', '..', 'assets-volume');
+    : path.join(HERE, '..', '..', 'assets');
 const GALLERY_DIR = path.join(ASSETS_DIR, 'gallery');
 
 const checkPaths = async () => {

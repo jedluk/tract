@@ -1,11 +1,12 @@
 const router = require('express').Router();
+const cors = require('cors');
 const formidable = require('formidable');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
 const { assetsDir } = require('../../config/assets');
 const logger = require('../../config/logger');
 
-router.post('/upload', (req, res) => {
+router.post('/upload', cors(), (req, res) => {
   const form = new formidable.IncomingForm();
   let hashName = '';
   form.uploadDir = assetsDir;
