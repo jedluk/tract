@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import uuidv1 from 'uuid/v1';
-import axios from 'axios';
 import Modal from './CustomModal';
+import { uploadImage } from '../services/fileServer';
 import { MODAL_CONTENT_TEXT } from '../utils/stringConstant';
 import { setGrayImage, setColorImage } from '../redux/actions/img';
+import { grayImgSelector, colorImgSelector } from '../redux/selectors/img';
 
 class UploadBox extends Component {
   constructor(props) {
     super(props);
-    this.boxID = uuidv1().slice(0, 8);
     this.state = {
       uploaded: false,
       dragActive: false,
@@ -20,68 +19,56 @@ class UploadBox extends Component {
     this.handleModalClose = this.handleModalClose.bind(this);
   }
 
-  componentDidMount() {
-    const box = document.getElementById(this.boxID);
-    // box.addEventListener('dragenter', () => {
-    //   this.setState({ dragActive: true });
-    // });
-    box.addEventListener('dragleave', () => {
-      if (this.state.uploaded !== true) {
-        this.setState({ dragActive: false });
-      }
-    });
-    box.addEventListener('drop', evt => {
-      evt.stopPropagation();
-      evt.preventDefault();
-      const files = evt.dataTransfer.files;
-      if (files.length > 1) {
-        this.setState({
-          modal: true,
-          modalText: MODAL_CONTENT_TEXT.MUL_INFO
-        });
-      } else {
-        if (/(\.png)|(\.jpg)|(\.tif?f)$/.test(files[0].name)) {
-          this.handleUploadFile(files[0]);
-        } else {
-          this.setState({
-            modal: true,
-            modalText: MODAL_CONTENT_TEXT.EXT_INFO
-          });
-        }
-      }
-    });
-    box.addEventListener('dragover', evt => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      evt.dataTransfer.dropEffect = 'copy';
-    });
-  }
-
-  handleUploadFile(file, idx) {
-    const fd = new FormData();
-    fd.append('file', file, this.props.gray ? `gray_${file.name}` : file.name);
-    const url = '/upload';
-    axios
-      .post(url, fd)
-      .then(res => {
-        const { fileName: name } = res.data;
-        this.setState({ uploaded: true });
-        if (this.props.gray) {
-          this.props.setGray(name);
-        } else {
-          this.props.setColor(name);
-        }
-      })
-      .catch(error => {
-        const { message: msg } = error.response.data;
-        const modalText = msg.toLowerCase().match(/too large/)
-          ? MODAL_CONTENT_TEXT.ERR_SIZE
-          : MODAL_CONTENT_TEXT.ERR_UPL;
-        this.setState({
-          modalText,
-          modal: true
-        });
+  handleDrop = evt => {
+    evt.stopPropagation();
+    evt.preventDefault();
+    const files = evt.dataTransfer.files;
+    if (files.length > 1) {
+      this.setState({
+        modal: true,
+        modalText: MODAL_CONTENT_TEXT.MUL_INFO
       });
+    }
+    if (/(\.png)|(\.jpg)|(\.tif?f)$/.test(files[0].name)) {
+      this.handleUploadFile(files[0]);
+    } else {
+      this.setState({
+        modal: true,
+        modalText: MODAL_CONTENT_TEXT.EXT_INFO
+      });
+    }
+  };
+
+  handleDragLeave = () => {
+    if (!this.state.uploaded) {
+      this.setState({ dragActive: false });
+    }
+  };
+
+  handleDragOver = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    evt.dataTransfer.dropEffect = 'copy';
+  };
+
+  handleDragEnter = () => this.setState({ dragActive: true });
+
+  handleDragLeave = () => {
+    this.setState({ dragActive: false });
+  };
+
+  async handleUploadFile(file) {
+    try {
+      const { fileName: name } = await uploadImage(file);
+      this.props.gray ? this.props.setGray(name) : this.props.setColor(name);
+      this.setState({ uploaded: true });
+    } catch (error) {
+      const { message: msg } = error.response.data;
+      const modalText = msg.toLowerCase().match(/too large/)
+        ? MODAL_CONTENT_TEXT.ERR_SIZE
+        : MODAL_CONTENT_TEXT.ERR_UPL;
+      this.setState({ modalText, modal: true });
+    }
   }
 
   handleModalClose() {
@@ -110,10 +97,11 @@ class UploadBox extends Component {
 
     return (
       <div
-        id={this.boxID}
         className={boxClasses}
-        onDragEnter={() => this.setState({ dragActive: true })}
-        onDragLeave={() => this.setState({})}
+        onDrop={this.handleDrop}
+        onDragOver={this.handleDragOver}
+        onDragLeave={this.handleDragLeave}
+        onDragEnter={this.handleDragEnter}
       >
         <Modal
           show={this.state.modal}
@@ -126,11 +114,15 @@ class UploadBox extends Component {
           <img src={this.props.src} width="200px" alt="" />
         )}
         <h3>{text}</h3>
-        <h5>{this.state.dragActive ? '' : 'Drop here'}</h5>
+        {!this.state.uploaded && <h5>Drop here</h5>}
       </div>
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  imgAvailable: ownProps.gray ? grayImgSelector(state) : colorImgSelector(state)
+});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -140,6 +132,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(UploadBox);

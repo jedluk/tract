@@ -9,7 +9,6 @@ export default class MainView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      refresh: false,
       points: {}
     };
   }
@@ -26,8 +25,6 @@ export default class MainView extends Component {
     }, 1500);
   };
 
-  refreshBoxes = () => this.setState({ refresh: true });
-
   render() {
     return (
       <div>
@@ -39,18 +36,9 @@ export default class MainView extends Component {
           </div>
         </header>
         <section className="content">
-          <UploadBox
-            gray
-            text={STEP_DESCRIPTION[1]}
-            src={IMG_PATH[1]}
-            refresh={this.state.refresh}
-          />
-          <UploadBox text={STEP_DESCRIPTION[2]} src={IMG_PATH[2]} refresh={this.state.refresh} />
-          <RunnerBox
-            text={STEP_DESCRIPTION[3]}
-            src={IMG_PATH[3]}
-            refreshBoxes={this.refreshBoxes}
-          />
+          <UploadBox gray text={STEP_DESCRIPTION.GRAY} src={IMG_PATH.GRAY} />
+          <UploadBox text={STEP_DESCRIPTION.COLOR} src={IMG_PATH.COLOR} />
+          <RunnerBox text={STEP_DESCRIPTION.MIX} src={IMG_PATH.MIX} />
         </section>
         <footer>
           Go to <Link to="/gallery">gallery</Link>

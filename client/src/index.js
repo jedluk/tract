@@ -8,14 +8,13 @@ import AppRouter from './router/AppRouter';
 import io from 'socket.io-client';
 import emmiter from './redux/emmiter';
 import './styles/style.scss';
+import 'react-fontawesome';
 
-const store = createStore(
-  rootReducer,
-  process.env.NODE_ENV === 'development' ? applyMiddleware(logger) : undefined
-);
+const DEV_MODE = process.env.NODE_ENV === 'development';
+const store = createStore(rootReducer, DEV_MODE ? applyMiddleware(logger) : undefined);
 
-export const socket = io();
-emmiter(socket, store);
+export const socket = null; //io(`ws://${DEV_MODE ? 'localhost' : 'cv_worker'}:6083`);
+// emmiter(socket, store);
 
 const app = (
   <Provider store={store}>

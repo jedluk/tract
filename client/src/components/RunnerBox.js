@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 import { processImage } from '../redux/actions/img';
+import { grayImgSelector, colorImgSelector, readyImgSelector } from '../redux/selectors/img';
 
 class RunnerBox extends Component {
   constructor(props) {
@@ -44,13 +45,11 @@ class RunnerBox extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    grayImg: state.getState().img.grayImg,
-    colorImg: state.getState().img.colorImg,
-    readyImg: state.getState().img.readyImg
-  };
-};
+const mapStateToProps = state => ({
+  grayImg: grayImgSelector(state),
+  colorImg: colorImgSelector(state),
+  readyImg: readyImgSelector(state)
+});
 
 const mapDispatchToProps = dispatch => ({
   process: () => dispatch(processImage())
