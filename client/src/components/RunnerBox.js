@@ -19,45 +19,36 @@ class RunnerBox extends Component {
   }
 
   render() {
-    const icon = this.state.processing ? 'fas fa-spinner' : 'far fa-play-circle';
+    const { grayImg, colorImg, readyImg, history } = this.props;
+    const { processing } = this.state;
+    const icon = processing ? 'fas fa-spinner' : 'far fa-play-circle';
     return (
       <div className="uploadBox">
-        {this.props.grayImg && this.props.colorImg ? (
-          this.props.readyImg ? (
-            <div className="readyImageBox" onClick={() => this.props.history.push('/gallery')}>
-              <img src={`/ready/${this.props.readyImg}`} width="200px" alt="" />
+        {grayImg && colorImg ? (
+          readyImg ? (
+            <div className="readyImageBox" onClick={() => history.push('/gallery')}>
+              <img src={`/ready/${readyImg}`} width="200px" alt="" />
             </div>
           ) : (
             <div onClick={this.handleProcessing}>
-              <FontAwesome
-                name={icon}
-                size="5x"
-                style={{ color: '#00C516' }}
-                spin={this.state.processing}
-              />
+              <FontAwesome name={icon} size="5x" style={{ color: '#00C516' }} spin={processing} />
             </div>
           )
         ) : (
           <img src={this.props.src} width="200px" alt="" />
         )}
-        <h3>
-          {this.state.processing
-            ? this.props.readyImg
-              ? ''
-              : 'Processing image...'
-            : this.props.text}
-        </h3>
+        {!processing && <h3>{this.props.text}</h3>}
+        <h3>{!processing && readyImg ? '' : 'Processing image...'}</h3>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.getState());
   return {
-    grayImg: state.img.grayImg,
-    colorImg: state.img.colorImg,
-    readyImg: state.img.readyImg
+    grayImg: state.getState().img.grayImg,
+    colorImg: state.getState().img.colorImg,
+    readyImg: state.getState().img.readyImg
   };
 };
 

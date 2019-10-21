@@ -1,48 +1,42 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import uuidv1 from 'uuid/v1';
 import UploadBox from './UploadBox';
-import { makeGlow } from '../utils/glow';
+import Glow from './Glow';
 import RunnerBox from './RunnerBox';
 import { STEP_DESCRIPTION, IMG_PATH, MAIN_IMG_TEXT } from '../utils/stringConstant';
+import { debounce } from '../utils/debounce';
 
 export default class MainView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      refresh: false
+      refresh: false,
+      points: {}
     };
-    this.headerId = uuidv1().slice(0, 8);
-    this.refreshBoxes = this.refreshBoxes.bind(this);
-    this.generateBlob = this.generateBlob.bind(this);
+    this.handleMouseMoveDebounced = debounce(this.handleMouseMove, 50);
   }
 
-  componentDidMount() {
-    const container = document.getElementById(this.headerId);
-    const generateBlob = this.generateBlob;
-    container.addEventListener('mousemove', function(evt) {
-      if (window.innerHeight * 0.69 > evt.clientY) {
-        generateBlob(evt, container);
-      }
-    });
-  }
-
-  generateBlob(e, container) {
-    const glow = makeGlow(e);
-    container.appendChild(glow);
+  handleMouseMove = e => {
+    const now = new Date().getTime();
+    const { clientY, clientX } = e;
+    const point = { [now]: { clientY, clientX } };
+    this.setState({ points: { ...this.state.points, ...point } });
     setTimeout(() => {
-      container.removeChild(glow);
-    }, 1000);
-  }
+      const newPoints = { ...this.state.points };
+      delete newPoints[now];
+      this.setState({ points: { ...newPoints } });
+    }, 3000);
+  };
 
-  refreshBoxes() {
+  refreshBoxes = () => {
     this.setState({ refresh: true });
-  }
+  };
 
   render() {
     return (
       <div>
-        <header id={this.headerId}>
+        <header onMouseMove={this.handleMouseMove}>
+          <Glow points={this.state.points} />
           <div className="row">
             <h1>{MAIN_IMG_TEXT.title}</h1>
             <h2>{MAIN_IMG_TEXT.subtitile}</h2>

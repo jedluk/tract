@@ -6,7 +6,7 @@ Fully experimental project focused on usage of deep learning in computer vision\
 https://mysterious-ocean-98570.herokuapp.com/
 ```
 
-## Instalation
+## Installation
 
 App is splited into microservices and fully dockerized. Each service can be built independently (client, fileServer and cv_worker). To run whole stack via single command just type
 

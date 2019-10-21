@@ -1,0 +1,32 @@
+import React from 'react';
+
+const genColor = (time, factor) => {
+  return Math.round(Math.abs(Math.sin(time * factor)) * 255);
+};
+
+const Glow = ({ points = {} }) => {
+  console.log(points);
+  return Object.entries(points).map(([time, { clientX, clientY }]) => {
+    const r = genColor(time, 0.002);
+    const g = genColor(time, 0.003);
+    const b = genColor(time, 0.005);
+    const color = `rgb(${r}, ${g}, ${b})`;
+    return (
+      <div
+        key={time}
+        style={{
+          color,
+          backgroundColor: color,
+          position: 'absolute',
+          left: `${clientX}px`,
+          top: `${clientY}px`,
+          borderRadius: '50%',
+          width: 10,
+          height: 10
+        }}
+      />
+    );
+  });
+};
+
+export default Glow;
