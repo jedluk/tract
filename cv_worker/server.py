@@ -8,6 +8,7 @@ import sys
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+logger = logging.getLogger()
 FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=FORMAT)
 
@@ -28,9 +29,11 @@ def handle_process_image(payload):
     try:
         process_image(**payload)
         emit('response', {'status': 'OK'})
-    except AssertionError:
+    except AssertionError as e:
+        logging.error(f'Missing incoming args {str(e)}')
         emit('response', {'status': 'ERROR', 'msg': 'Missing args'})
-    except:
+    except Exception as e:
+        logging.error(f'Failed to process image {str(e)}')
         emit('response', {'status': 'ERROR', 'msg': 'Error while processing'})
 
 

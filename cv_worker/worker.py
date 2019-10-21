@@ -2,11 +2,17 @@ import numpy as np
 import sys
 import cv2
 import random
-from os import getenv
+import logging
+from os import getenv, path
 
-MODE = getenv('MODE', 'development')
+
+def get_base_path():
+    mode = getenv('MODE', 'development')
+    prefix = '..' if mode == 'development' else '.'
+    return path.abspath(path.join(prefix, 'assets'))
 
 
+# TODO: fully migrate to logger
 class ImagePainter:
     R_CHANNEL, G_CHANNEL, B_CHANNEL = (0, 1, 2)
     DEV_MODE, LOGGING = (0, 0)
@@ -146,28 +152,33 @@ class ImagePainter:
             file.close()
         self.outImg = out_img
         if save:
-            if MODE == 'production':
-                cv2.imwrite('/opt/assets', self.outImg)
-            else:
-                cv2.imwrite(self.outImgPath, self.outImg)
-            print("image saved")
+            base_path = get_base_path()
+            cv2.imwrite(base_path, self.outImg)
+            logging.info(f"image {self.outImg} saved")
 
 
 def process_image(**kwargs):
     required_args = ['inputColor', 'inputGray', 'outImg']
-    if not ['inputColor', 'inputGray', 'outImg'] in kwargs.values():
+    if not all([k in kwargs.keys() for k in required_args]):
         raise AssertionError(
             f"missing arguments !!! {', '.join(required_args)} must be provided")
     input_color, input_gray, out_img, clusters = None, None, None, 10
+
+    base_path = get_base_path()
     for key, value in kwargs.items():
         if key == 'inputColor':
-            input_color = value
+            input_color = path.abspath(path.join(base_path, value))
         elif key == 'inputGray':
-            input_gray = value
+            input_gray = path.abspath(path.join(base_path, value))
         elif key == 'N':
-            clusters = value
+            try:
+                clusters = int(value)
+            except ValueError:
+                pass
         elif key == 'outImg':
             out_img = value
+    logging.info(
+        f"real values: \n\tinput_color={input_color}\n\tinput_gray={input_gray}\n\tout_img={out_img}\n\tclusters={clusters}")
     # explicitly show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
