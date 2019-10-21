@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import { MODAL_TITLE } from '../utils/stringConstant';
 
 export default ({ show, handleModalClose, text }) => (
-  <Modal isOpen={show} closeTimeoutMS={200} ariaHideApp={false} className="modal">
+  <Modal isOpen={show} className="modal">
     <h3 className="modal__title">{MODAL_TITLE}</h3>
     <div className="modal__content">
       <div>

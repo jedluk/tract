@@ -5,18 +5,15 @@ const genColor = (time, factor) => {
 };
 
 const Glow = ({ points = {} }) => {
-  console.log(points);
   return Object.entries(points).map(([time, { clientX, clientY }]) => {
     const r = genColor(time, 0.002);
     const g = genColor(time, 0.003);
     const b = genColor(time, 0.005);
-    const color = `rgb(${r}, ${g}, ${b})`;
     return (
       <div
         key={time}
         style={{
-          color,
-          backgroundColor: color,
+          backgroundColor: `rgb(${r}, ${g}, ${b})`,
           position: 'absolute',
           left: `${clientX}px`,
           top: `${clientY}px`,

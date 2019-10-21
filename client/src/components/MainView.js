@@ -4,7 +4,6 @@ import UploadBox from './UploadBox';
 import Glow from './Glow';
 import RunnerBox from './RunnerBox';
 import { STEP_DESCRIPTION, IMG_PATH, MAIN_IMG_TEXT } from '../utils/stringConstant';
-import { debounce } from '../utils/debounce';
 
 export default class MainView extends Component {
   constructor(props) {
@@ -13,7 +12,6 @@ export default class MainView extends Component {
       refresh: false,
       points: {}
     };
-    this.handleMouseMoveDebounced = debounce(this.handleMouseMove, 50);
   }
 
   handleMouseMove = e => {
@@ -25,12 +23,10 @@ export default class MainView extends Component {
       const newPoints = { ...this.state.points };
       delete newPoints[now];
       this.setState({ points: { ...newPoints } });
-    }, 3000);
+    }, 1500);
   };
 
-  refreshBoxes = () => {
-    this.setState({ refresh: true });
-  };
+  refreshBoxes = () => this.setState({ refresh: true });
 
   render() {
     return (
@@ -44,7 +40,7 @@ export default class MainView extends Component {
         </header>
         <section className="content">
           <UploadBox
-            gray={true}
+            gray
             text={STEP_DESCRIPTION[1]}
             src={IMG_PATH[1]}
             refresh={this.state.refresh}

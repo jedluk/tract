@@ -38,7 +38,7 @@ class RunnerBox extends Component {
           <img src={this.props.src} width="200px" alt="" />
         )}
         {!processing && <h3>{this.props.text}</h3>}
-        <h3>{!processing && readyImg ? '' : 'Processing image...'}</h3>
+        <h3>{!processing && readyImg && 'Processing image...'}</h3>
       </div>
     );
   }
