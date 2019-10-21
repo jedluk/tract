@@ -98,10 +98,12 @@ class UploadBox extends Component {
     return (
       <div
         className={boxClasses}
-        onDrop={this.handleDrop}
-        onDragOver={this.handleDragOver}
-        onDragLeave={this.handleDragLeave}
-        onDragEnter={this.handleDragEnter}
+        {...(!this.props.imgAvailable && {
+          onDrop: this.handleDrop,
+          onDragOver: this.handleDragOver,
+          onDragLeave: this.handleDragLeave,
+          onDragEnter: this.handleDragEnter
+        })}
       >
         <Modal
           show={this.state.modal}

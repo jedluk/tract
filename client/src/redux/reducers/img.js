@@ -1,5 +1,4 @@
 import { ACTIONS } from '../actions/img';
-import { socket } from '../../index';
 
 const DEFAULT_STATE = {
   grayImg: '',
@@ -20,15 +19,6 @@ export default (state = DEFAULT_STATE, action) => {
         ...state,
         colorImg: action.name
       };
-    // case ACTIONS.PROCESS: {
-    //   socket.emit('process', {
-    //     gray: state.grayImg,
-    //     color: state.colorImg
-    //   });
-    //   return {
-    //     ...state
-    //   };
-    // }
     case ACTIONS.SET_READY: {
       return {
         ...state,
@@ -36,10 +26,9 @@ export default (state = DEFAULT_STATE, action) => {
       };
     }
     case ACTIONS.RESET: {
-      const previous = [...state.previous, state.readyImg];
       return {
         ...DEFAULT_STATE,
-        previous
+        previous: [...state.previous, state.readyImg]
       };
     }
     default:
