@@ -25,8 +25,9 @@ class ImagePainter:
         gray_height, gray_width, gray_channels = self.grayImg.shape
         if gray_channels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
-        if save_gray:
-            cv2.imwrite('gray.jpg', self.grayImg)
+        if save_gray and getenv('MODE', 'development') == 'development':
+            final_path = path.join(get_base_path(), 'gray.jpg')
+            cv2.imwrite(final_path, self.grayImg)
         self.outImg = np.zeros([save_gray, gray_width, 3])
         self.clusters = int(n)
         self.estimatedColors = np.zeros([self.clusters, 3])
