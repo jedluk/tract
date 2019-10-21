@@ -5,12 +5,12 @@ services:
       context: ./cv_worker
       dockerfile: Dockerfile
     environment:
-      PORT: 6083
-      MODE: production
+      - PORT: 6300
+      - MODE: production
     depends_on:
       - file_server
     ports:
-      - '6083:6083'
+      - '6300:6300'
     volumes:
       - ./assets:/opt/assets
 
@@ -19,8 +19,8 @@ services:
       context: ./fileServer
       dockerfile: Dockerfile
     environment:
-      PORT: 8081
-      NODE_ENV: production
+      - PORT: 8081
+      - NODE_ENV: production
     ports:
       - '8081:8081'
     volumes:
@@ -32,7 +32,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - file_server
+      - cv_worker
     environment:
-      SOCKET_PORT: 6300
+      - SOCKET_PORT: 6300
     ports:
       - '3000:80'
