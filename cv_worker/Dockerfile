@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 COPY server.py /opt/server.py
 COPY worker.py /opt/worker.py
 
-RUN ["python", "server.py"]
+CMD ["python", "server.py"]

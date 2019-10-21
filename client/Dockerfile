@@ -5,12 +5,12 @@ RUN npm i -g yarn
 WORKDIR /app
 
 COPY package.json /app/package.json
-COPY yarn-lock.json /opt/yarn-lock.json
+COPY yarn.lock /app/yarn.lock
 
 RUN yarn install
 
-COPY src /app
-COPY public /app
+COPY src /app/src
+COPY public /app/public
 
 RUN yarn build
 
