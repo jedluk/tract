@@ -8,14 +8,14 @@ export const MODAL_CONTENT_TEXT = {
   ERR_UPL: 'Something went wrong during uploading an image. Please try one more time.'
 };
 export const STEP_DESCRIPTION = {
-  1: 'Upload gray-scale image',
-  2: 'Add some colorfull pattern',
-  3: 'Run and wait for result'
+  GRAY: 'Upload gray-scale image',
+  COLOR: 'Add some colorfull pattern',
+  MIX: 'Run and wait for result'
 };
 export const IMG_PATH = {
-  1: '../img/pencil_gray.jpg',
-  2: '../img/pencil.jpg',
-  3: '../img/pencil_mix.jpg'
+  GRAY: '../img/pencil_gray.jpg',
+  COLOR: '../img/pencil.jpg',
+  MIX: '../img/pencil_mix.jpg'
 };
 export const MAIN_IMG_TEXT = {
   title: 'Image rectification',
