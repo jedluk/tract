@@ -1,60 +1,44 @@
 {
-  "name": "tract-client",
-  "version": "1.0.0",
-  "description": "Python with Tensorflow on backend, React on frontend, let's create some art!",
-  "main": "index.js",
+  "name": "client",
+  "version": "0.1.0",
   "private": true,
-  "proxy": {
-    "/upload": {
-      "target": "http://localhost:5000"
-    }
+  "dependencies": {
+    "axios": "^0.19.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-fontawesome": "^1.6.1",
+    "react-modal": "^3.10.1",
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "socket.io-client": "^2.3.0",
+    "uuid": "^3.3.3"
   },
   "scripts": {
-    "dev-server": "webpack-dev-server --host 0.0.0.0 --port 5000",
-    "build:dev": "webpack && gulp production",
-    "build:prod": "webpack && gulp production",
-    "sass": "gulp sass",
-    "watch-sass": "gulp watch"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "author": "Jedrzej Lukasiuk & Filip Gloch",
-  "license": "Apache-2.0",
-  "dependencies": {
-    "axios": "^0.18.0",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "css-loader": "^0.28.11",
-    "extract-text-webpack-plugin": "^3.0.0",
-    "font-awesome": "^4.7.0",
-    "gulp": "^3.9.1",
-    "gulp-cli": "^2.0.1",
-    "gulp-sass": "^4.0.1",
-    "moment": "^2.22.1",
-    "node-sass": "^4.9.0",
-    "normalize.css": "^8.0.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-fontawesome": "^1.6.1",
-    "react-modal": "^3.4.4",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
-    "redux": "^4.0.0",
-    "redux-logger": "^3.0.6",
-    "sass-loader": "^7.0.1",
-    "socket.io-client": "^2.1.1",
-    "style-loader": "^0.21.0",
-    "uglify-js": "^3.3.22",
-    "uuid": "^3.2.1",
-    "webpack": "3.1.0",
-    "node-sass": "^4.0.0"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "devDependencies": {
-    "jest": "^22.4.3",
-    "webpack-dev-server": "^2.5.1"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

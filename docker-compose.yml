@@ -1,16 +1,37 @@
-version: '3'
+version: '3.4'
 services:
-  tfserver:
-    build: ./tfserver
-    networks:
-      - backend
-  web:
-    build: .
+  cv_worker:
+    build:
+      context: ./cv_worker
+      dockerfile: Dockerfile
+    environment:
+      PORT: '6300'
+      MODE: production
+    depends_on:
+      - file_server
     ports:
-      - "5000:5000"
-    networks:
-      - backend
+      - '6300:6300'
+    volumes:
+      - ./assets:/opt/assets
 
-networks:
-  backend:
-    driver: "bridge"
+  file_server:
+    build:
+      context: ./fileServer
+      dockerfile: Dockerfile
+    environment:
+      PORT: '8081'
+      NODE_ENV: production
+    ports:
+      - '8081:8081'
+    volumes:
+      - ./assets:/opt/assets
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - file_server
+      - cv_worker
+    ports:
+      - '3000:80'

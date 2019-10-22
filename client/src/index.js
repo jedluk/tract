@@ -1,22 +1,27 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { logger } from "redux-logger";
-import { createStore, applyMiddleware } from "redux";
-import configureStore from "./store/configureStore";
-import AppRouter from "./routers/AppRouter";
-import rootReducer from "./reducers";
-import io from "socket.io-client";
-import emmiter from "./emmiter";
-import "normalize.css/normalize.css";
-import "./styles/style.scss";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { logger } from 'redux-logger';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/rootReducer';
+import AppRouter from './router/AppRouter';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import io from 'socket.io-client';
+import './styles/style.scss';
 
-export const socket = io();
+const { NODE_ENV, SOCKET_PORT = 6300 } = process.env;
 
-// const middleware = applyMiddleware(logger);
-const store = createStore(rootReducer);
+const DEV_MODE = NODE_ENV === 'development';
 
-emmiter(socket, store);
+const middleware = [logger, thunk];
+const store = createStore(
+  rootReducer,
+  DEV_MODE ? composeWithDevTools(applyMiddleware(...middleware)) : applyMiddleware(thunk)
+);
+
+const worker = DEV_MODE ? `http://localhost:${SOCKET_PORT}` : '/socket';
+export const socket = io(worker);
 
 const app = (
   <Provider store={store}>
@@ -24,4 +29,4 @@ const app = (
   </Provider>
 );
 
-ReactDOM.render(app, document.getElementById("root"));
+ReactDOM.render(app, document.getElementById('root'));

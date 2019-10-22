@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import FontAwesome from "react-fontawesome";
-import axios from "axios";
-import uuidv1 from "uuid/v1";
-import { setReadyImage, processImage } from "../actions/img";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import FontAwesome from 'react-fontawesome';
+import { processImage, reset } from '../redux/actions/img';
+import { grayImgSelector, colorImgSelector, readyImgSelector } from '../redux/selectors/img';
+import { FILE_SERVER } from '../services/fileServer';
 
 class RunnerBox extends Component {
   constructor(props) {
@@ -12,62 +12,52 @@ class RunnerBox extends Component {
     this.state = {
       processing: false
     };
-    this.handleProcessing = this.handleProcessing.bind(this);
   }
 
-  
+  componentDidMount() {
+    this.props.reset();
+  }
 
-  handleProcessing() {
+  handleProcessing = () => {
     this.props.process();
     this.setState({ processing: true });
-  }
+  };
 
   render() {
-    const icon = this.state.processing
-      ? "fas fa-spinner"
-      : "far fa-play-circle";
+    const { grayImg, colorImg, readyImg, history } = this.props;
+    const { processing } = this.state;
+    const icon = processing ? 'fas fa-spinner' : 'far fa-play-circle';
     return (
       <div className="uploadBox">
-        {this.props.grayImg && this.props.colorImg ? (
-          this.props.readyImg ? (
-            <div
-              className="readyImageBox"
-              onClick={() => this.props.history.push("/gallery")}
-            >
-              <img src={`/ready/${this.props.readyImg}`} width="200px" alt="" />
-            </div>
-          ) : (
-            <div onClick={this.handleProcessing}>
-              <FontAwesome
-                name={icon}
-                size="5x"
-                style={{ color: "#00C516" }}
-                spin={this.state.processing}
-              />
-            </div>
-          )
-        ) : (
-          <img src={this.props.src} width="200px" alt="" />
+        {(!grayImg || !colorImg) && (
+          <img src={this.props.src} width="200px" alt="" style={{ paddingTop: 10 }} />
         )}
-        <h3>
-          {this.state.processing
-            ? this.props.readyImg
-              ? ""
-              : "Processing image..."
-            : this.props.text}
-        </h3>
+        {grayImg && colorImg && !readyImg && (
+          <div onClick={this.handleProcessing}>
+            <FontAwesome name={icon} size="5x" style={{ color: '#00C516' }} spin={processing} />
+          </div>
+        )}
+        {readyImg && (
+          <div className="readyImageBox" onClick={() => history.push('/gallery')}>
+            <img src={`${FILE_SERVER}/${readyImg}`} width="200px" alt="" />
+          </div>
+        )}
+        {!processing && <h3>{this.props.text}</h3>}
+        {!processing && <h5>...and enjoy it!</h5>}
+        <h3>{!processing && readyImg && 'Processing image...'}</h3>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  grayImg: state.img.grayImg,
-  colorImg: state.img.colorImg,
-  readyImg: state.img.readyImg
+  grayImg: grayImgSelector(state),
+  colorImg: colorImgSelector(state),
+  readyImg: readyImgSelector(state)
 });
 
 const mapDispatchToProps = dispatch => ({
+  reset: () => dispatch(reset()),
   process: () => dispatch(processImage())
 });
 
