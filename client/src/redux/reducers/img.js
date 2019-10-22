@@ -22,13 +22,14 @@ export default (state = DEFAULT_STATE, action) => {
     case ACTIONS.SET_READY: {
       return {
         ...state,
-        readyImg: action.name
+        readyImg: action.name,
+        previous: [...state.previous, action.name]
       };
     }
     case ACTIONS.RESET: {
       return {
         ...DEFAULT_STATE,
-        previous: [...state.previous, state.readyImg]
+        previous: [...state.previous]
       };
     }
     default:

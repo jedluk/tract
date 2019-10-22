@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
-import { processImage } from '../redux/actions/img';
+import { processImage, reset } from '../redux/actions/img';
 import { grayImgSelector, colorImgSelector, readyImgSelector } from '../redux/selectors/img';
 import { FILE_SERVER } from '../services/fileServer';
 
@@ -12,6 +12,10 @@ class RunnerBox extends Component {
     this.state = {
       processing: false
     };
+  }
+
+  componentDidMount() {
+    this.props.reset();
   }
 
   handleProcessing = () => {
@@ -53,6 +57,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  reset: () => dispatch(reset()),
   process: () => dispatch(processImage())
 });
 

@@ -19,9 +19,9 @@ class Gallery extends Component {
     getSamples()
       .then(sample => {
         const { readyImg, previous } = this.props;
-        const sampleImages = [...readyImg, ...previous, ...sample];
+        const sampleImages = [...previous, ...sample].filter(Boolean).slice(0, 4);
         const mainImg = readyImg || sample[Math.ceil(Math.random() * sample.length - 1)];
-        this.setState({ mainImg, sampleImages: sampleImages.slice(0, 4) });
+        this.setState({ mainImg, sampleImages });
       })
       .catch(err => console.error('cannot get sample images'));
   }
@@ -38,12 +38,13 @@ class Gallery extends Component {
       <div className="galeryBackground">
         <div className="container">
           <div className="main-img">
-            <img ref={this.mainImgRef} src={`${FILE_SERVER}/${this.state.mainImg}`} />
+            <img ref={this.mainImgRef} alt="main" src={`${FILE_SERVER}/${this.state.mainImg}`} />
           </div>
           <div className="imgs">
             {this.state.sampleImages.map(imgName => (
               <img
                 key={imgName}
+                alt="sample"
                 onClick={() => this.changeMain(imgName)}
                 src={`${FILE_SERVER}/${imgName}`}
               />
@@ -55,7 +56,7 @@ class Gallery extends Component {
             go <Link to="/">home</Link>
           </div>
           Bare awesome free images are taken from{' '}
-          <a href="https://www.pexels.com/" target="_blank">
+          <a href="https://www.pexels.com/" rel="noopener noreferrer" target="_blank">
             pexels
           </a>
         </footer>
