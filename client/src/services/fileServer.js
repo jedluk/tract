@@ -9,3 +9,9 @@ export async function uploadImage(file) {
   const res = await axios.post(`${FILE_SERVER}/upload`, fd);
   return res.data;
 }
+
+export async function getSamples() {
+  const res = await axios.get(`${FILE_SERVER}/samples`);
+  const { samples } = res.data;
+  return samples;
+}

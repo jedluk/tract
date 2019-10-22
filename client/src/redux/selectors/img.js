@@ -16,3 +16,8 @@ export const readyImgSelector = createSelector(
   imgBranch,
   img => img.readyImg
 );
+
+export const previousImagesSelector = createSelector(
+  imgBranch,
+  img => img.previous
+);
