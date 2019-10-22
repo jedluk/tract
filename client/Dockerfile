@@ -1,4 +1,6 @@
-FROM node:dubnium-slim as build
+FROM node:dubnium as build
+
+# RUN apt-get update && apt-get install python2.7  -y
 
 RUN npm i -g yarn 
 
