@@ -17,7 +17,7 @@ docker-compose up
 By default:
 
 > file server is running on PORT 8081,
-> cv worker is running on PORT 6083,
+> cv worker is running on PORT 6300,
 > client is served on port 3000.
 
 You can change the whole configuration in docker-compose.yml file
