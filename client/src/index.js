@@ -10,7 +10,9 @@ import thunk from 'redux-thunk';
 import io from 'socket.io-client';
 import './styles/style.scss';
 
-const DEV_MODE = process.env.NODE_ENV === 'development';
+const { NODE_ENV, SOCKET_PORT = 6300 } = process.env;
+
+const DEV_MODE = NODE_ENV === 'development';
 
 const middleware = [logger, thunk];
 const store = createStore(
@@ -18,8 +20,8 @@ const store = createStore(
   DEV_MODE ? composeWithDevTools(applyMiddleware(...middleware)) : applyMiddleware(thunk)
 );
 
-const { SOCKET_PORT = 6300 } = process.env;
-export const socket = io(`http://localhost:${SOCKET_PORT}`);
+const worker = DEV_MODE ? `http://localhost:${SOCKET_PORT}` : '/socket';
+export const socket = io(worker);
 
 const app = (
   <Provider store={store}>

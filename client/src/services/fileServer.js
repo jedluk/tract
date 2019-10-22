@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const FILE_SERVER =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:8081' : 'http://file_server:8081';
+  process.env.NODE_ENV === 'development' ? 'http://localhost:8081' : '/api';
 
 export async function uploadImage(file) {
   const fd = new FormData();
