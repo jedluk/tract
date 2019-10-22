@@ -64,7 +64,7 @@ class ImagePainter:
         self.colorThresholds = self.calculate_color_individuals(
             cum_hist_vec_sort)
         if self.DEV_MODE:
-            logging.info(f'color thershold {self.colorThresholds}')
+            logging.info(f'color thersholds {self.colorThresholds}')
 
     # think about minimal variance spread
     def calculate_color_individuals(self, sorted_hist, use_mean=False):
@@ -103,7 +103,7 @@ class ImagePainter:
 
         self.estimatedColors = self.find_color_individuals(classified_pixels)
         if self.DEV_MODE:
-            logging.info('estimated Colors: \n{}'.format(self.estimatedColors))
+            logging.info('estimated colors: \n{}'.format(self.estimatedColors))
 
     def find_color_individuals(self, classified_pixels, use_mean=False):
         cluster_index = 3
@@ -125,11 +125,8 @@ class ImagePainter:
         for x in range(0, height):
             for y in range(0, width):
                 pixel_intensity = self.grayImg[x, y]
-                idx = self.clusters - 1
-                for index in range(0, self.clusters):
-                    if self.grayThresholds[index] - pixel_intensity >= 0:
-                        idx = index
-                        break
+                diff = [abs(self.grayThresholds[index] - pixel_intensity) for index in range(0, self.clusters)]
+                idx = np.argmin(diff)
                 out_img[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
                 out_img[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
                 out_img[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
@@ -145,20 +142,19 @@ def process_image(**kwargs):
         raise AssertionError(
             f"missing arguments !!! {', '.join(required_args)} must be provided")
     input_color, input_gray, out_img, clusters = None, None, None, 10
-
     base_path = get_base_path()
     for key, value in kwargs.items():
         if key == 'inputColor':
             input_color = path.abspath(path.join(base_path, value))
         elif key == 'inputGray':
             input_gray = path.abspath(path.join(base_path, value))
+        elif key == 'outImg':
+            out_img = path.abspath(path.join(base_path, value))
         elif key == 'N':
             try:
                 clusters = int(value)
             except ValueError:
                 pass
-        elif key == 'outImg':
-            out_img = path.abspath(path.join(base_path, value))
     logging.info(
         f"""processing image with params:
         input_color={input_color}
@@ -166,11 +162,9 @@ def process_image(**kwargs):
         out_img={out_img}
         clusters={clusters}
         """)
-    # explicitly show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
-    image_painter = ImagePainter(
-        input_color, input_gray, out_img, clusters, False)
+    image_painter = ImagePainter(input_color, input_gray, out_img, clusters, False)
     if 1 == ImagePainter.CLUSTERING:
         image_painter.find_colors_by_clustering()
         image_painter.color_gray_image()
