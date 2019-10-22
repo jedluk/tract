@@ -12,7 +12,6 @@ def get_base_path():
     return path.abspath(path.join(prefix, 'assets'))
 
 
-# TODO: fully migrate to logger
 class ImagePainter:
     R_CHANNEL, G_CHANNEL, B_CHANNEL = (0, 1, 2)
     DEV_MODE, LOGGING = (0, 0)
@@ -28,7 +27,7 @@ class ImagePainter:
         if save_gray and getenv('MODE', 'development') == 'development':
             final_path = path.join(get_base_path(), 'gray.jpg')
             cv2.imwrite(final_path, self.grayImg)
-        self.outImg = np.zeros([save_gray, gray_width, 3])
+        self.outImg = np.zeros([gray_height, gray_width, 3])
         self.clusters = int(n)
         self.estimatedColors = np.zeros([self.clusters, 3])
         self.grayThresholds = np.zeros(self.clusters)
@@ -40,17 +39,12 @@ class ImagePainter:
             self.colorThresholds = np.zeros(self.clusters)
 
     def find_colors_by_clustering(self):
-        processed_image = self.colorImg
-        processed_image = processed_image.reshape((-1, 3))
-        processed_image = np.float32(processed_image)
-        criteria = (cv2.TERM_CRITERIA_EPS +
-                    cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-        K = self.clusters
-        centers = cv2.kmeans(processed_image, K, criteria, 10, 0)[2]
-        # centers = cv2.kmeans(processingImage,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)[2]
+        processed_image, K = np.float32(self.colorImg.reshape((-1, 3))), self.clusters
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+        compactness, labels, centers = cv2.kmeans(processed_image, K, 0, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
         self.estimatedColors = centers
         if self.DEV_MODE:
-            print(self.estimatedColors)
+            logging.info(f"estimated colors {self.estimatedColors}")
 
     def find_color_thresholds(self, use_blur=False):
         height, width = (self.colorImg.shape[0], self.colorImg.shape[1])
@@ -70,7 +64,7 @@ class ImagePainter:
         self.colorThresholds = self.calculate_color_individuals(
             cum_hist_vec_sort)
         if self.DEV_MODE:
-            print('color thresholds {}'.format(self.colorThresholds))
+            logging.info(f'color thershold {self.colorThresholds}')
 
     # think about minimal variance spread
     def calculate_color_individuals(self, sorted_hist, use_mean=False):
@@ -109,8 +103,7 @@ class ImagePainter:
 
         self.estimatedColors = self.find_color_individuals(classified_pixels)
         if self.DEV_MODE:
-            # print(classifiedPixels)
-            print('estimated Colors: \n{}'.format(self.estimatedColors))
+            logging.info('estimated Colors: \n{}'.format(self.estimatedColors))
 
     def find_color_individuals(self, classified_pixels, use_mean=False):
         cluster_index = 3
@@ -128,34 +121,22 @@ class ImagePainter:
     def color_gray_image(self, save=True):
         height, width = (self.grayImg.shape[0], self.grayImg.shape[1])
         out_img = np.zeros([height, width, 3])
-        self.grayThresholds = np.arange(
-            int(255 / self.clusters), 256, int(255 / self.clusters))
-        if self.LOGGING:
-            file = open('logs.txt', 'w')
-            self.grayThresholds.tofile(file, " ")
+        self.grayThresholds = np.arange(int(255 / self.clusters), 256, int(255 / self.clusters))
         for x in range(0, height):
             for y in range(0, width):
-                intensity = self.grayImg[x, y]
+                pixel_intensity = self.grayImg[x, y]
                 idx = self.clusters - 1
                 for index in range(0, self.clusters):
-                    if self.grayThresholds[index] - intensity >= 0:
+                    if self.grayThresholds[index] - pixel_intensity >= 0:
                         idx = index
                         break
-                if self.LOGGING:
-                    file.write(
-                        "intensity {}\tclass {}\t diffs\t".format(intensity, idx))
-                    # diffs.tofile(file,sep=", ")
-                    file.write("\n")
                 out_img[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
                 out_img[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
                 out_img[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
-        if self.DEV_MODE:
-            file.close()
         self.outImg = out_img
         if save:
-            base_path = get_base_path()
-            cv2.imwrite(base_path, self.outImg)
-            logging.info(f"image {self.outImg} saved")
+            cv2.imwrite(self.outImgPath, self.outImg)
+            logging.info(f"image {self.outImgPath} saved")
 
 
 def process_image(**kwargs):
@@ -177,9 +158,14 @@ def process_image(**kwargs):
             except ValueError:
                 pass
         elif key == 'outImg':
-            out_img = value
+            out_img = path.abspath(path.join(base_path, value))
     logging.info(
-        f"real values: \n\tinput_color={input_color}\n\tinput_gray={input_gray}\n\tout_img={out_img}\n\tclusters={clusters}")
+        f"""processing image with params:
+        input_color={input_color}
+        input_gray={input_gray}
+        out_img={out_img}
+        clusters={clusters}
+        """)
     # explicitly show we want to use clustering
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
