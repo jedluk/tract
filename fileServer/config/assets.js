@@ -10,16 +10,16 @@ const ASSETS_DIR =
   process.env.NODE_ENV === 'production'
     ? path.join(HERE, '..', 'assets')
     : path.join(HERE, '..', '..', 'assets');
-const GALLERY_DIR = path.join(ASSETS_DIR, 'gallery');
+const SAMPLES_DIR = path.join(ASSETS_DIR, 'samples');
 
 const checkPaths = async () => {
   if (!isDir(ASSETS_DIR)) {
     await mkdir(ASSETS_DIR);
     logger.info(`created assets dir in ${ASSETS_DIR}`);
   }
-  if (!isDir(GALLERY_DIR)) {
-    await mkdir(path.join(ASSETS_DIR, 'gallery'));
-    logger.info(`created gallery dir in ${GALLERY_DIR}`);
+  if (!isDir(SAMPLES_DIR)) {
+    await mkdir(path.join(SAMPLES_DIR, 'samples'));
+    logger.info(`created samples dir in ${SAMPLES_DIR}`);
   }
 };
 
@@ -32,4 +32,4 @@ const isDir = path => {
   }
 };
 
-module.exports = { checkPaths, assetsDir: ASSETS_DIR };
+module.exports = { checkPaths, assetsDir: ASSETS_DIR, samplesDir: SAMPLES_DIR };
