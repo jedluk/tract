@@ -2,7 +2,6 @@ version: '3.4'
 services:
   cv_worker:
     build:
-      network: host
       context: ./cv_worker
       dockerfile: Dockerfile
     environment:

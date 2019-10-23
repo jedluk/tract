@@ -38,6 +38,6 @@ def handle_process_image(payload):
 
 
 if __name__ == '__main__':
-    port = int(getenv('PORT', 6300))
+    port = int(getenv('PORT', 5000))
     logger.info(f'cv_worker available on port {port}')
-    socketio.run(app, port=port)
+    socketio.run(app, port=port, host="0.0.0.0")

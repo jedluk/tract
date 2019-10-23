@@ -10,7 +10,7 @@ import thunk from 'redux-thunk';
 import io from 'socket.io-client';
 import './styles/style.scss';
 
-const { NODE_ENV, SOCKET_PORT = 6300 } = process.env;
+const { NODE_ENV, SOCKET_PORT = 5000 } = process.env;
 
 const DEV_MODE = NODE_ENV === 'development';
 
