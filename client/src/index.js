@@ -20,7 +20,7 @@ const store = createStore(
   DEV_MODE ? composeWithDevTools(applyMiddleware(...middleware)) : applyMiddleware(thunk)
 );
 
-const worker = DEV_MODE ? `http://localhost:${SOCKET_PORT}` : '/socket';
+const worker = DEV_MODE ? `http://localhost:${SOCKET_PORT}` : '';
 export const socket = io(worker);
 
 const app = (

@@ -2,15 +2,16 @@ version: '3.4'
 services:
   cv_worker:
     build:
+      network: host
       context: ./cv_worker
       dockerfile: Dockerfile
     environment:
-      PORT: '6300'
+      PORT: '5000'
       MODE: production
     depends_on:
       - file_server
     ports:
-      - '6300:6300'
+      - '5000:5000'
     volumes:
       - ./assets:/opt/assets
 
@@ -35,3 +36,5 @@ services:
       - cv_worker
     ports:
       - '3000:80'
+    # links:
+    #   - cv_worker
