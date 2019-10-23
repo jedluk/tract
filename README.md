@@ -20,7 +20,7 @@ By default:
 > cv worker is running on PORT 5000,
 > client is served on port 3000.
 
-You can also run each service individually by typing `docker-compose up <service_name>`. The whole configuration can is placed in docker-compose.yml file , and can be adjusted to your needs.
+You can also run each service individually by typing `docker-compose up <service_name>`. The whole configuration is placed in docker-compose.yml file , and can be adjusted for your needs.
 
 ## Development mode
 
