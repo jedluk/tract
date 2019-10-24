@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 import { processImage, reset } from '../redux/actions/img';
-import { grayImgSelector, colorImgSelector, readyImgSelector } from '../redux/selectors/img';
+import { grayImgSelector, colorImgSelector, requestedImageAvailableSelector, requestedImageSelector } from '../redux/selectors/img';
 import { FILE_SERVER } from '../services/fileServer';
 
 class RunnerBox extends Component {
@@ -24,7 +24,7 @@ class RunnerBox extends Component {
   };
 
   render() {
-    const { grayImg, colorImg, readyImg, history } = this.props;
+    const { grayImg, colorImg, readyImg, imgAvailable, history } = this.props;
     const { processing } = this.state;
     const icon = processing ? 'fas fa-spinner' : 'far fa-play-circle';
     return (
@@ -32,12 +32,12 @@ class RunnerBox extends Component {
         {(!grayImg || !colorImg) && (
           <img src={this.props.src} width="200px" alt="" style={{ paddingTop: 10 }} />
         )}
-        {grayImg && colorImg && !readyImg && (
+        {grayImg && colorImg && !imgAvailable && (
           <div onClick={this.handleProcessing}>
             <FontAwesome name={icon} size="5x" style={{ color: '#00C516' }} spin={processing} />
           </div>
         )}
-        {readyImg && (
+        {imgAvailable && (
           <div className="readyImageBox" onClick={() => history.push('/gallery')}>
             <img src={`${FILE_SERVER}/${readyImg}`} width="200px" alt="" />
           </div>
@@ -53,7 +53,8 @@ class RunnerBox extends Component {
 const mapStateToProps = state => ({
   grayImg: grayImgSelector(state),
   colorImg: colorImgSelector(state),
-  readyImg: readyImgSelector(state)
+  imgAvailable: requestedImageAvailableSelector(state),
+  readyImg: requestedImageSelector(state)
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,9 +1,12 @@
-import { ACTIONS } from '../actions/img';
+import { ACTIONS } from "../actions/img";
 
 const DEFAULT_STATE = {
-  grayImg: '',
-  colorImg: '',
-  readyImg: '',
+  grayImg: "",
+  colorImg: "",
+  resultImage: {
+    src: "",
+    available: false
+  },
   previous: []
 };
 
@@ -19,13 +22,23 @@ export default (state = DEFAULT_STATE, action) => {
         ...state,
         colorImg: action.name
       };
-    case ACTIONS.SET_READY: {
+    case ACTIONS.SET_REQUESTED_IMAGE:
       return {
         ...state,
-        readyImg: action.name,
-        previous: [...state.previous, action.name]
+        resultImage: {
+          ...state.resultImage,
+          src: action.name
+        }
       };
-    }
+    case ACTIONS.SET_REQUESTED_IMAGE_AVAILABLE:
+      return {
+        ...state,
+        resultImage: {
+          ...state.resultImage,
+          available: true
+        },
+        previous: [...state.previous, state.resultImage.src]
+      };
     case ACTIONS.RESET: {
       return {
         ...DEFAULT_STATE,

@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 const imgBranch = state => state.img;
 
@@ -12,9 +12,14 @@ export const colorImgSelector = createSelector(
   img => img.colorImg
 );
 
-export const readyImgSelector = createSelector(
+export const requestedImageAvailableSelector = createSelector(
   imgBranch,
-  img => img.readyImg
+  img => img.resultImage.available
+);
+
+export const requestedImageSelector = createSelector(
+  imgBranch,
+  img => img.resultImage.src
 );
 
 export const previousImagesSelector = createSelector(

@@ -1,15 +1,19 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { reset } from '../redux/actions/img';
-import { readyImgSelector, previousImagesSelector } from '../redux/selectors/img';
-import { getSamples, FILE_SERVER } from '../services/fileServer';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { reset } from "../redux/actions/img";
+import {
+  previousImagesSelector,
+  requestedImageAvailableSelector,
+  requestedImageSelector
+} from "../redux/selectors/img";
+import { getSamples, FILE_SERVER } from "../services/fileServer";
 
 class Gallery extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mainImg: '',
+      mainImg: "",
       sampleImages: []
     };
     this.mainImgRef = React.createRef();
@@ -18,19 +22,20 @@ class Gallery extends Component {
   componentDidMount() {
     getSamples()
       .then(sample => {
-        const { readyImg, previous } = this.props;
+        const { readyImg, imgAvailable, previous } = this.props;
         const sampleImages = [...previous, ...sample].filter(Boolean).slice(0, 4);
-        const mainImg = readyImg || sample[Math.ceil(Math.random() * sample.length - 1)];
+        const mainImg =
+          (imgAvailable && readyImg) || sample[Math.ceil(Math.random() * sample.length - 1)];
         this.setState({ mainImg, sampleImages });
       })
-      .catch(err => console.error('cannot get sample images'));
+      .catch(err => console.error("cannot get sample images"));
   }
 
   changeMain = mainImg => {
     this.setState({ mainImg });
     const { current } = this.mainImgRef;
-    current.classList.add('fade-in');
-    setTimeout(() => current.classList.remove('fade-in'), 500);
+    current.classList.add("fade-in");
+    setTimeout(() => current.classList.remove("fade-in"), 500);
   };
 
   render() {
@@ -55,7 +60,7 @@ class Gallery extends Component {
           <div className="goHome">
             go <Link to="/">home</Link>
           </div>
-          Bare awesome free images are taken from{' '}
+          Bare awesome free images are taken from{" "}
           <a href="https://www.pexels.com/" rel="noopener noreferrer" target="_blank">
             pexels
           </a>
@@ -66,7 +71,8 @@ class Gallery extends Component {
 }
 
 const mapStateToProps = state => ({
-  readyImg: readyImgSelector(state),
+  imgAvailable: requestedImageAvailableSelector(state),
+  readyImg: requestedImageSelector(state),
   previous: previousImagesSelector(state)
 });
 
