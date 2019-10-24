@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY server.py /opt/server.py
 COPY worker.py /opt/worker.py
+COPY image_status.py /opt/image_status.py
 
 EXPOSE 5000
 
