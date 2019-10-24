@@ -18,7 +18,7 @@ const checkPaths = async () => {
     logger.info(`created assets dir in ${ASSETS_DIR}`);
   }
   if (!isDir(SAMPLES_DIR)) {
-    await mkdir(path.join(SAMPLES_DIR, 'samples'));
+    await mkdir(SAMPLES_DIR);
     logger.info(`created samples dir in ${SAMPLES_DIR}`);
   }
 };
