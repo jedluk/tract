@@ -62,9 +62,9 @@ export const processImage = () => (dispatch, getState) => {
   dispatch(setRequestedImage(outImg));
   const N = window.TRACT_CLUSTERS || 10;
   socket.emit("process", {
+    N,
+    outImg,
     inputGray: grayImgSelector(getState()),
     inputColor: colorImgSelector(getState()),
-    outImg,
-    N
   });
 };
