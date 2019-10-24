@@ -2,6 +2,7 @@ from flask import Flask
 from flask_socketio import SocketIO, emit
 from worker import process_image
 from os import getenv
+from image_status import check_status, set_status, ImgStatus
 import logging
 import sys
 
@@ -23,11 +24,21 @@ def handle_client_dicconnect():
     logging.info(msg='client disconnected')
 
 
+@socketio.on('chceck img')
+def handle_check_img(payload):
+    logging.info(msg=f"checking status of {payload}")
+    status = check_status(payload)
+    if status == ImgStatus.READY:
+        emit('response', {'status': 'OK', 'msg': 'Image already available'})
+
+
 @socketio.on('process')
 def handle_process_image(payload):
     logging.info(msg=f"requested params {payload}")
     try:
+        set_status(payload['outImg'], ImgStatus.PROCESSED)
         process_image(**payload)
+        set_status(payload['outImg'], ImgStatus.READY)
         emit('response', {'status': 'OK'})
     except AssertionError as e:
         logging.error(f'Missing incoming args {str(e)}')
