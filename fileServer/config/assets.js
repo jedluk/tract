@@ -21,6 +21,7 @@ const checkPaths = async () => {
     await mkdir(SAMPLES_DIR);
     logger.info(`created samples dir in ${SAMPLES_DIR}`);
   }
+  logger.info(`ASSETS DIR LOCATED HERE: ${ASSETS_DIR}`);
 };
 
 const isDir = path => {
