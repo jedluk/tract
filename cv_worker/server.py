@@ -24,7 +24,7 @@ def handle_client_dicconnect():
     logging.info(msg='client disconnected')
 
 
-@socketio.on('chceck img')
+@socketio.on('check img')
 def handle_check_img(payload):
     logging.info(msg=f"checking status of {payload}")
     status = check_status(payload)
