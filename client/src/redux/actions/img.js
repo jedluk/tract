@@ -31,11 +31,12 @@ export const reset = () => ({
 
 export const processImage = () => (dispatch, getState) => {
   const outImg = `${uuid()}.png`;
+  const N = window.TRACT_CLUSTERS || 10;
   socket.emit('process', {
     inputGray: grayImgSelector(getState()),
     inputColor: colorImgSelector(getState()),
     outImg,
-    N: 10
+    N
   });
   socket.on('response', data => {
     const { status, msg } = data;
