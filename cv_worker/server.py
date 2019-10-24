@@ -20,7 +20,7 @@ def handle_client_connect():
 
 
 @socketio.on('disconnect')
-def handle_client_dicconnect():
+def handle_client_disconnect():
     logging.info(msg='client disconnected')
 
 
@@ -50,5 +50,5 @@ def handle_process_image(payload):
 
 if __name__ == '__main__':
     port = int(getenv('PORT', 5000))
-    logger.info(f'cv_worker available on port {port}')
+    logging.info(f'cv_worker available on port {port}')
     socketio.run(app, port=port, host="0.0.0.0")
