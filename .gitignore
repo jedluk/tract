@@ -3,10 +3,9 @@ client/public/dist/*
 client/public/fonts/*
 client/public/img/ready
 client/public/img/gallery
-client22/*
-server/assets/*
+assets/*
+!/assets/samples/
 node_modules
 __pycache__
-assets
 log.log
 .idea
