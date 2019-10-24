@@ -27,7 +27,7 @@ You can also run each service individually by typing `docker-compose up <service
 In development mode you can run services without docker (please remember that client app relies on other services):
 
 - for client app run `yarn install && yarn run start` inside client directory, 
-- for file server run `npm install && npm run start` inside fileServer directory,
+- for file server run `npm install && npm run dev` inside fileServer directory,
 - for cv_worker probably best way is to create new virtual environment. Personally I use [mkvirtualenv](https://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html) to manage this. Once you have new environment created run `pip install --no-cache-dir -r /tmp/requirements.txt` inside cv_worker dir and then `python server.py`
 
 \*tensorflow model is part of repository but does not work as expected, currently solution based on k-means clustering is provided
