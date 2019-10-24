@@ -1,4 +1,4 @@
-import { ACTIONS } from "../actions/img";
+import ACTIONS from "../actions/types";
 
 const DEFAULT_STATE = {
   grayImg: "",
