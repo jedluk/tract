@@ -2,10 +2,18 @@ import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import Modal from './CustomModal';
-import { uploadImage } from '../services/fileServer';
+import { uploadImage, FILE_SERVER } from '../services/fileServer';
 import { MODAL_CONTENT_TEXT } from '../utils/stringConstant';
 import { setGrayImage, setColorImage } from '../redux/actions/img';
 import { grayImgSelector, colorImgSelector } from '../redux/selectors/img';
+
+const getReadyImageStyles = (imgURL, gray) => ({
+  backgroundImage: `url(${FILE_SERVER}/${imgURL}`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  ...(gray && { filter: 'grayscale(100%)' })
+});
 
 class UploadBox extends Component {
   constructor(props) {
@@ -89,41 +97,40 @@ class UploadBox extends Component {
   }
 
   render() {
-    const customBorder = this.state.dragActive ? 'customBorder' : '';
-    const boxClasses = `uploadBox ${customBorder}`;
-    const text = this.deduceText();
-    const fontName = this.state.uploaded ? 'fas fa-check' : 'far fa-image';
-    const fontColor = this.state.uploaded ? '#00C516' : '#abc';
-
+    const { gray, imageSource } = this.props;
+    const { uploaded, modal, modalText, dragActive } = this.state;
     return (
       <div
-        className={boxClasses}
-        {...(!this.props.imgAvailable && {
+        {...(!imageSource && {
           onDrop: this.handleDrop,
           onDragOver: this.handleDragOver,
           onDragLeave: this.handleDragLeave,
           onDragEnter: this.handleDragEnter
         })}
+        className={`uploadBox ${dragActive && !uploaded ? 'customBorder' : ''}`}
+        style={{
+          ...(uploaded && getReadyImageStyles(imageSource, gray))
+        }}
       >
-        <Modal
-          show={this.state.modal}
-          handleModalClose={this.handleModalClose}
-          text={this.state.modalText}
-        />
-        {this.state.dragActive ? (
-          <FontAwesome name={fontName} size="5x" style={{ color: fontColor }} />
+        <Modal show={modal} handleModalClose={this.handleModalClose} text={modalText} />
+        {dragActive ? (
+          <FontAwesome
+            name={uploaded ? 'fas fa-check' : 'far fa-image'}
+            size="5x"
+            style={{ color: uploaded ? '#00C516' : '#abc' }}
+          />
         ) : (
           <img src={this.props.src} width="200px" alt="" />
         )}
-        <h3>{text}</h3>
-        {!this.state.uploaded && <h5>Drop here</h5>}
+        <h3>{this.deduceText()}</h3>
+        {!uploaded && <h5>Drop here</h5>}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  imgAvailable: ownProps.gray ? grayImgSelector(state) : colorImgSelector(state)
+  imageSource: ownProps.gray ? grayImgSelector(state) : colorImgSelector(state)
 });
 
 const mapDispatchToProps = dispatch => {

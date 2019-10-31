@@ -21,6 +21,7 @@
   h3 {
     padding-top: 20px;
   }
+
 }
 
 @media (max-width: $breakpoint) {
@@ -33,6 +34,20 @@
 .uploadBox:hover {
   color: $dark-gray;
   transition: color 0.5s;
+}
+
+
+.uploadBox__counter-box {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10px;
+}
+
+.uploadBox__counter {
+  margin-left: 8px;
+  margin-right: 8px;
+  font-size: 3rem;
 }
 
 .customBorder {
