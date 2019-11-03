@@ -57,11 +57,12 @@ export const reset = () => ({
   type: ACTIONS.RESET
 });
 
-export const processImage = n => (dispatch, getState) => {
+export const processImage = (n, cartoon) => (dispatch, getState) => {
   const outImg = `${uuid()}.png`;
   dispatch(setRequestedImage(outImg));
   socket.emit('process', {
     outImg,
+    cartoon,
     N: n || window.TRACT_CLUSTERS || 5,
     inputGray: grayImgSelector(getState()),
     inputColor: colorImgSelector(getState())

@@ -17,10 +17,11 @@ class ImagePainter:
     DEV_MODE, LOGGING = (0, 0)
     CLUSTERING = 1
 
-    def __init__(self, color, gray, out_path, n, save_gray):
+    def __init__(self, color, gray, out_path, n, cartoon, save_gray):
         self.colorImg = cv2.cvtColor(cv2.imread(color), cv2.COLOR_BGR2RGB)
         self.grayImg = cv2.imread(gray)
         self.outImgPath = out_path
+        self.cartoon = cartoon
         gray_height, gray_width, gray_channels = self.grayImg.shape
         if gray_channels == 3:
             self.grayImg = cv2.cvtColor(self.grayImg, cv2.COLOR_BGR2GRAY)
@@ -39,9 +40,12 @@ class ImagePainter:
             self.colorThresholds = np.zeros(self.clusters)
 
     def find_colors_by_clustering(self):
-        processed_image, K = np.float32(self.colorImg.reshape((-1, 3))), self.clusters
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-        compactness, labels, centers = cv2.kmeans(processed_image, K, 0, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        processed_image, K = np.float32(
+            self.colorImg.reshape((-1, 3))), self.clusters
+        criteria = (cv2.TERM_CRITERIA_EPS +
+                    cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+        compactness, labels, centers = cv2.kmeans(
+            processed_image, K, 0, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
         self.estimatedColors = centers
         if self.DEV_MODE:
             logging.info(f"estimated colors {self.estimatedColors}")
@@ -121,19 +125,35 @@ class ImagePainter:
     def color_gray_image(self, save=True):
         height, width = (self.grayImg.shape[0], self.grayImg.shape[1])
         out_img = np.zeros([height, width, 3])
-        self.grayThresholds = np.arange(int(255 / self.clusters), 256, int(255 / self.clusters))
+        self.grayThresholds = np.arange(
+            int(255 / self.clusters), 256, int(255 / self.clusters))
         for x in range(0, height):
             for y in range(0, width):
                 pixel_intensity = self.grayImg[x, y]
-                diff = [abs(self.grayThresholds[index] - pixel_intensity) for index in range(0, self.clusters)]
+                diff = [abs(self.grayThresholds[index] - pixel_intensity)
+                        for index in range(0, self.clusters)]
                 idx = np.argmin(diff)
                 out_img[[x], [y], self.B_CHANNEL] = self.estimatedColors[idx, 0]
                 out_img[[x], [y], self.G_CHANNEL] = self.estimatedColors[idx, 1]
                 out_img[[x], [y], self.R_CHANNEL] = self.estimatedColors[idx, 2]
         self.outImg = out_img
+        if self.cartoon:
+            src = self.outImg.copy().astype(np.uint8)
+            self.outImg = ImagePainter.make_cartoon(src)
         if save:
             cv2.imwrite(self.outImgPath, self.outImg)
             logging.info(f"image {self.outImgPath} saved")
+
+    @staticmethod
+    def make_cartoon(src):
+        # height, width, channels = src.shape
+        gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+        gray = cv2.medianBlur(gray, 5)
+        edges = cv2.adaptiveThreshold(
+            gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
+        color = cv2.bilateralFilter(src, 9, 300, 300)
+        cartoon = cv2.bitwise_and(color, color, mask=edges)
+        return cartoon
 
 
 def process_image(**kwargs):
@@ -141,7 +161,7 @@ def process_image(**kwargs):
     if not all([k in kwargs.keys() for k in required_args]):
         raise AssertionError(
             f"missing arguments !!! {', '.join(required_args)} must be provided")
-    input_color, input_gray, out_img, clusters = None, None, None, 10
+    input_color, input_gray, out_img, clusters, cartoon = None, None, None, 10, False
     base_path = get_base_path()
     for key, value in kwargs.items():
         if key == 'inputColor':
@@ -155,16 +175,21 @@ def process_image(**kwargs):
                 clusters = int(value)
             except ValueError:
                 pass
+        elif key == 'cartoon':
+            cartoon = bool(value)
+
     logging.info(
         f"""processing image with params:
         input_color={input_color}
         input_gray={input_gray}
         out_img={out_img}
         clusters={clusters}
+        cartoon={cartoon}
         """)
     ImagePainter.CLUSTERING = 1
     ImagePainter.DEV_MODE = 0
-    image_painter = ImagePainter(input_color, input_gray, out_img, clusters, False)
+    image_painter = ImagePainter(color=input_color, gray=input_gray, out_path=out_img, n=clusters,
+                                 cartoon=cartoon, save_gray=False)
     if 1 == ImagePainter.CLUSTERING:
         image_painter.find_colors_by_clustering()
         image_painter.color_gray_image()

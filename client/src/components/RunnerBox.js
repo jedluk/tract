@@ -10,12 +10,14 @@ import {
   requestedImageSelector
 } from '../redux/selectors/img';
 import { FILE_SERVER } from '../services/fileServer';
+import { scaleToClustersRange } from '../utils/numbers';
 
 class RunnerBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
       clusters: 4,
+      cartoon: false,
       processing: false
     };
   }
@@ -25,7 +27,8 @@ class RunnerBox extends Component {
   }
 
   handleProcessing = () => {
-    this.props.process(this.state.clusters);
+    const { clusters, cartoon } = this.state;
+    this.props.process(clusters, cartoon);
     this.setState({ processing: true });
   };
 
@@ -35,9 +38,15 @@ class RunnerBox extends Component {
   decreaseClusters = () =>
     this.state.clusters > 1 && this.setState({ clusters: this.state.clusters - 1 });
 
+  handleToggleCartoon = () => this.setState({ cartoon: !this.state.cartoon });
+
+  countClusterFontWeight = () => ({
+    fontWeight: scaleToClustersRange(100, 900, this.state.clusters)
+  });
+
   render() {
     const { grayImg, colorImg, readyImg, imgAvailable, history } = this.props;
-    const { processing } = this.state;
+    const { processing, cartoon, clusters } = this.state;
     const icon = processing ? 'fas fa-spinner' : 'far fa-play-circle';
     return (
       <div className="uploadBox">
@@ -45,14 +54,27 @@ class RunnerBox extends Component {
           <img src={this.props.src} width="200px" alt="" style={{ paddingTop: 10 }} />
         )}
         {grayImg && colorImg && !imgAvailable && (
-          <div>
+          <div className={!processing ? 'uploadBox__processing-panel' : ''}>
             {!processing && (
               <>
                 <h3>Number of clusters:</h3>
                 <div className="uploadBox__counter-box">
                   <FontAwesome onClick={this.decreaseClusters} name="fas fa-minus" size="2x" />
-                  <span className="uploadBox__counter">{this.state.clusters}</span>
+                  <span className="uploadBox__counter" style={this.countClusterFontWeight()}>
+                    {clusters}
+                  </span>
                   <FontAwesome onClick={this.increaseClusters} name="fas fa-plus" size="2x" />
+                </div>
+                <div>
+                  <input
+                    name="cartoon"
+                    type="checkbox"
+                    value={cartoon}
+                    onChange={this.handleToggleCartoon}
+                  />
+                  <label htmlFor="cartoon" style={{ ...(cartoon && { fontWeight: 'bold' }) }}>
+                    cartoon filter
+                  </label>
                 </div>
               </>
             )}
@@ -87,7 +109,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   reset: () => dispatch(reset()),
-  process: n => dispatch(processImage(n))
+  process: (n, useCartoon) => dispatch(processImage(n, useCartoon))
 });
 
 export default withRouter(
