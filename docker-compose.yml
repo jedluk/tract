@@ -37,3 +37,16 @@ services:
       - '3000:80'
     # links:
     #   - cv_worker
+
+  tests:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+    command: npx cypress run --browser chrome --config video=false
+    depends_on:
+      - client
+    environment:
+      - APP_URL=http://localhost:3000
+    volumes:
+      - ./e2e/cypress:/app/cypress
+      - ./e2e/cypress.json:/app/cypress.json
