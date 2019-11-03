@@ -12,6 +12,7 @@ const Glow = ({ points = {} }) => {
     return (
       <div
         key={time}
+        data-time-of-creation={time}
         style={{
           backgroundColor: `rgb(${r}, ${g}, ${b})`,
           position: 'absolute',
