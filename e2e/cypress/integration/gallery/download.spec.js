@@ -3,7 +3,7 @@ import GalleryPage from './GalleryPage';
 
 context('Download functionality', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env('APP_URL')}/gallery`);
+    cy.visit('/gallery');
   });
 
   it('should allow to download a image', () => {

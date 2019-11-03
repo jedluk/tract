@@ -23,7 +23,7 @@ export default class MainPage {
 
   spinnerVisible = () => cy.get('.uploadBox span.fa-spinner').should('exist');
 
-  readyImageBox = () => cy.get('.readyImageBox', { timeout: 30 * 1000 });
+  readyImageBox = () => cy.get('.readyImageBox', { timeout: 90 * 1000 });
 
   uploadImage = (fileName, boxNumber, flags = {}) =>
     new Cypress.Promise(resolve => {

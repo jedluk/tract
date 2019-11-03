@@ -3,11 +3,10 @@ import GalleryPage from './GalleryPage';
 
 context('Navigation', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env('APP_URL')}/gallery`, { timeout: 7 * 1000 });
+    cy.visit('/gallery');
     cy.location().should(location => {
       expect(location.hash).to.be.empty;
       expect(location.search).to.be.empty;
-      expect(location.origin).to.eq(Cypress.env('APP_URL'));
       expect(location.pathname).to.eq('/gallery');
     });
   });

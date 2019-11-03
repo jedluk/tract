@@ -2,9 +2,8 @@
 import MainPage from './MainPage';
 
 context('Header', () => {
-  beforeEach(() => {
-    cy.visit(Cypress.env('APP_URL'));
-  });
+  beforeEach(() => cy.visit('/'));
+
   it('should display title correctly', () => {
     const mainPage = new MainPage();
     mainPage

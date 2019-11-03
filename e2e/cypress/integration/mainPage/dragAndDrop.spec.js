@@ -2,9 +2,7 @@
 import MainPage from './MainPage';
 
 context('Drag and Drop', () => {
-  beforeEach(function() {
-    cy.visit(Cypress.env('APP_URL'));
-  });
+  beforeEach(() => cy.visit('/'));
 
   describe('dragging and dropping file', function() {
     it('should not allow to upload non-image files', function() {

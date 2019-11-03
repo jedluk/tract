@@ -2,9 +2,7 @@
 import MainPage from './MainPage';
 
 context('Processing a file', () => {
-  beforeEach(function() {
-    cy.visit(Cypress.env('APP_URL'));
-  });
+  beforeEach(() => cy.visit('/'));
 
   it('should generate new image based on 2 images provided', function() {
     const mainPage = new MainPage();

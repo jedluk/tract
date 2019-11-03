@@ -4,9 +4,7 @@ import MainPage from './MainPage';
 const getTimeOfCreation = el => parseInt(el.dataset.timeOfCreation);
 
 context('Glow', () => {
-  beforeEach(() => {
-    cy.visit(Cypress.env('APP_URL'));
-  });
+  beforeEach(() => cy.visit('/'));
 
   it('should be visible when moving mouse through the header area', () => {
     const mainPage = new MainPage();
