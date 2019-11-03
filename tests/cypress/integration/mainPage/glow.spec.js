@@ -1,14 +1,17 @@
 /// <reference types="Cypress" />
+import MainPage from './MainPage';
 
 const getTimeOfCreation = el => parseInt(el.dataset.timeOfCreation);
 
 context('Glow', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit(Cypress.env('APP_URL'));
   });
 
   it('should be visible when moving mouse through the header area', () => {
-    cy.get('header')
+    const mainPage = new MainPage();
+    mainPage
+      .header()
       .trigger('mousedown')
       .trigger('mousemove', 10, 10) // 1
       .trigger('mousemove', 11, 11) // 2
@@ -24,7 +27,7 @@ context('Glow', () => {
       .find('div[data-time-of-creation]')
       .should('have.length', 10);
 
-    cy.get('div[data-time-of-creation]').each(($el, index, $list) => {
+    mainPage.glow().each(($el, index, $list) => {
       // last child has no next element
       if (index !== $list.length - 1) {
         const currentCreatedTime = getTimeOfCreation($list[index]);
@@ -32,5 +35,8 @@ context('Glow', () => {
         expect(currentCreatedTime).to.be.lessThan(nextCreatedTime);
       }
     });
+
+    cy.wait(3000);
+    mainPage.glow().should('not.exist');
   });
 });
