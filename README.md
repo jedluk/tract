@@ -12,7 +12,7 @@ Please be aware that newest verison is not deployed yet since the last big chang
 App is splited into microservices and fully dockerized. Each service can be built independently (client, fileServer, cv_worker or e2e tests). To run whole stack type in terminal inside root directory:
 
 ```sh
-make dc-make-app
+make make-app
 ```
 
 By default:
@@ -42,6 +42,6 @@ npm install && npm run cy:run
 
 In this case you will see e2e tests running in Google Chrome. You can also run them via docker-compose by typing
 ```sh
-make dc-e2e
+make e2e
 ```
 but in this case they are running in headless mode (only results in terminal)
